@@ -1,0 +1,16 @@
+*{outline:none;}
+html,body{background:#000000;color:#FFFFFF;font:13px "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;margin:0;padding:0;}
+a{text-decoration:none;}
+img{border:none;}
+ul{list-style-type:none;padding:0;}
+
+#navShell{border-right:1px solid #65A7C0;position:absolute;top:0;bottom:0;z-index:2;width:200px;text-align:right;}
+	#navShell>div>h1{padding-right:15px;}
+	#nav>li{display:block;cursor:pointer;}
+		#nav>li>a{color:#FFFFFF;font-size:16px;padding:8px 15px;display:block;}
+		#nav>li>a:hover{color:#65A7C0;}
+		#nav>li>a.selected{color:#FFFFFF;background:#65A7C0;}
+
+#contentShell{z-index:1;padding-left:215px;}
+
+.hidden{display:none;}

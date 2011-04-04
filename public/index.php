@@ -1,26 +1,34 @@
 <?php
-#var_dump($_SERVER);
 require_once($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'init.php');
-$page = new Page(LONG_COMPANY_NAME,isset($_GET['p']) ? ((int) $_GET['p'] < 7 ? $_GET['p'] : 1) : 1);
-if(isset($_GET['id']))
-{
-	$dir = getDirById($_GET['id']);
-	$page->setTitle(LONG_COMPANY_NAME . ' :: ' . $dir['firstName'] . ' ' . $dir['lastName']);
-}else
-{
-	$dir = getDirById(1);
-}
-$dir = isset($_GET['id']) ? getDirById($_GET['id']) : getDirById(1);
-$script1 = '<script type="text/javascript">' . "\n";
-$script1 .= 'var feed = "' . $dir['feedURL'] . '";' . "\n";
-#$script1 .= 'window.onload = initShowreel;' . "\n";
-$script1 .= '</script>';
+require_once(ELEMENT_DIR . 'html_head.php');
+$pages = array('directors','feeds','notable','about','contact','users','files');
+$reqPage = isset($_GET['p']) ? strtolower($_GET['p']) : NULL;
+$selPage = in_array($reqPage,$pages,true) ? $reqPage : DEFAULT_PAGE;
 
-$page->addScript($script1);
-$page->showPlayer = true;
-$page->addHTML('<div id="directorInfo">');
-!empty($dir['bio']) ? $page->addHTML('<p>' . nl2br($dir['bio']) . '</p>') : null;
-!empty($dir['websiteURL']) ? $page->addHTML('<a href="' . $dir['websiteURL'] . '" target="_blank">visit ' . $dir['firstName'] . ' ' . $dir['lastName'] . (preg_match('/s$/',$dir['lastName']) ? '\'' : '\'s') . ' website</a>') : null;
-$page->addHTML('</div>');
-$page->dump();
+?>
+
+<div id="navShell">
+	<div>
+		<h1>Admin</h1>
+	</div>
+	<ul id="nav">
+		<li><a class="<?= $selPage == $pages[0] ? 'selected' : '' ?>" href="/?p=directors">Directors</a></li>
+		<li><a class="<?= $selPage == $pages[1] ? 'selected' : '' ?>" href="/?p=feeds">Feeds</a></li>
+		<li><a class="<?= $selPage == $pages[2] ? 'selected' : '' ?>" href="/?p=notable">Notable</a></li>
+		<li><a class="<?= $selPage == $pages[3] ? 'selected' : '' ?>" href="/?p=about">About</a></li>
+		<li><a class="<?= $selPage == $pages[4] ? 'selected' : '' ?>" href="/?p=contact">Contact</a></li>
+		<li><a class="<?= $selPage == $pages[5] ? 'selected' : '' ?>" href="/?p=users">Users</a></li>
+		<li><a class="<?= $selPage == $pages[6] ? 'selected' : '' ?>" href="/?p=files">Files</a></li>
+		<li><a href="/logout.php">Logout</a></li>
+	</ul>
+</div>
+
+<div id="contentShell">
+<?php
+require_once(ELEMENT_DIR . $selPage . '.php');
+?>
+</div>
+
+<?php
+require_once(ELEMENT_DIR . 'html_foot.php');
 ?>
