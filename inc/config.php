@@ -28,6 +28,7 @@ define('ARCHITECT_URL','http://www.karbonnyc.com/');
 
 #DEFAULTS
 define('DEFAULT_PAGE','directors');
+define('LOGIN_PAGE','login.php');
 
 #ABBREVIATIONS
 define('PHONE_ABBR','T:');

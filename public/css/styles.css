@@ -1,6 +1,7 @@
 *{outline:none;}
 html,body{background:#000000;color:#FFFFFF;font:13px "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;margin:0;padding:0;}
-a{text-decoration:none;}
+a{text-decoration:none;cursor:pointer;}
+button{cursor:pointer;}
 img{border:none;}
 ul{list-style-type:none;padding:0;}
 
@@ -12,5 +13,27 @@ ul{list-style-type:none;padding:0;}
 		#nav>li>a.selected{color:#FFFFFF;background:#65A7C0;}
 
 #contentShell{z-index:1;padding-left:215px;}
+	#addDirectorShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
+	#addDirectorShell>div{margin:10px 0;}
+		#addDirectorShell label{font-weight:bold;width:95px;display:block;float:left;text-align:right;padding-right:20px;}
+		#addDirectorShell input#firstName,#addDirectorShell input#lastName{width:200px;}
+		#addDirectorShell textarea{width:480px;}
+		#addDirectorShell input#description,#addDirectorShell input#website{width:480px;}
+		#addDirectorShell #addBtnShell{text-align:right;width:600px;margin-top:10px;}
+		#addDirectorShell #addDirectorBtn{background:url('/img/sprites.png') no-repeat scroll 0 0 transparent;border:none;width:84px;height:38px;}
+	#directorTable{float:left;}
+		#directorTable tr{cursor:pointer;}
+		#directorTable td{padding:2px 5px;}
+		#directorTable td.directorName{width:200px;}
+		#directorTable td.removeBtn{}
+	#editDirectorShell{float:left;}
+	#editDirectorShell>div{margin:10px 0;}
+		#editDirectorShell label{font-weight:bold;width:95px;display:block;float:left;text-align:right;padding-right:20px;}
+		#editDirectorShell input#firstName,#editDirectorShell input#lastName{width:200px;}
+		#editDirectorShell textarea{width:480px;}
+		#editDirectorShell input#description,#editDirectorShell input#website{width:480px;}
+		#editDirectorShell #updateBtnShell{text-align:right;width:600px;margin-top:10px;}
+		#editDirectorShell #updateDirectorBtn{background:url('/img/sprites.png') no-repeat scroll 0 -56px transparent;border:none;width:100px;height:38px;}
 
 .hidden{display:none;}
+tr.altRow{background:#141414;}

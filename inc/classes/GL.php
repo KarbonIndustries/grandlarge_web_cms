@@ -3,8 +3,10 @@
 class GL
 {
 	private static $link			= NULL;
+	private static $alt				= false;
+	private static $pages			= array('directors','feeds','notable','about','contact','users','files');
 
-	# SESSION FUNCTIONS
+	# SESSION METHODS
 	public static function startSession()
 	{
 		session_start();
@@ -12,14 +14,14 @@ class GL
 
 	public static function isLoggedIn()
 	{
-		return isset($_SESSION['username']);
+		return isset($_SESSION['user']);
 	}
 
 	public static function confirmLoggedIn()
 	{
 		if(!self::isLoggedIn())
 		{
-			redirectTo('index.php');
+			redirectTo(LOGIN_PAGE);
 		}
 	}
 
@@ -28,7 +30,8 @@ class GL
 		
 	}
 
-	# GENERAL FUNCTIONS
+
+	# GENERAL METHODS
 	public static function redirectTo($url = NULL)
 	{
 		if(isset($url))
@@ -38,7 +41,24 @@ class GL
 		}
 	}
 
-	# GENERAL DB FUNCTIONS
+	public static function altStr($str,$altStr = '')
+	{
+		$returnStr = self::$alt ? $str : $altStr;
+		self::$alt = !self::$alt;
+		return $returnStr;
+	}
+	
+	public static function resetAlt()
+	{
+		self::$alt = false;
+	}
+
+	public static function getPages()
+	{
+		return self::$pages;
+	}
+
+	# GENERAL DB METHODS
 	public static function openConnection()
 	{
 		self::$link = isset(self::$link) ? self::$link : mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -90,6 +110,8 @@ class GL
 		}
 	}
 
+
+	# SELECT METHODS
 	public static function getDirectors()
 	{
 		$query = "";
