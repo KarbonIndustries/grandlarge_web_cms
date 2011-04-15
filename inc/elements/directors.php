@@ -12,6 +12,7 @@
 
 <div>
 	<h3>Edit Director</h3>
+
 	<table id="directorTable" cellspacing="0" cellpadding="0" border="0">
 	<?php
 	$directors = GL::getDirectors();
@@ -27,6 +28,7 @@
 	GL::resetAlt();
 	?>
 	</table>
+
 	<div id="editDirectorShell">
 		<div><label for="firstName">First Name</label><input type="text" name="firstName" id="firstName" /></div>
 		<div><label for="lastName">Last Name</label><input type="text" name="lastName" id="lastName" /></div>
