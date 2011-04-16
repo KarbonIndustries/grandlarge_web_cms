@@ -4,9 +4,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . '..' . DIRECTORY_
 require_once(INC_DIR . 'db.php');
 require_once(INC_DIR . 'functions.php');
 
-$db_connection = connectDb();
-$db = useDb(DB_NAME,$db_connection);
-
 function __autoload($class_name)
 {
 		$file1 = INC_DIR . $class_name . '.php';

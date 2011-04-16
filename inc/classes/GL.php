@@ -6,28 +6,37 @@ class GL
 	private static $alt				= false;
 	private static $pages			= array('directors','feeds','notable','about','contact','users','files');
 
-	# SESSION METHODS
-	public static function startSession()
-	{
-		session_start();
-	}
 
-	public static function isLoggedIn()
+	# SELECT METHODS
+	public static function getDirectors()
 	{
-		return isset($_SESSION['user']);
-	}
-
-	public static function confirmLoggedIn()
-	{
-		if(!self::isLoggedIn())
+		$link = self::openConnection();
+		$query = "";
+		$query .= "SELECT `directors`.`id`,`directors`.`firstName`,`directors`.`lastName` ";
+		$query .= "FROM `directors` ";
+		$query .= "WHERE `directors`.`active` = 1 ";
+		$query .= "ORDER BY `directors`.`firstName`";
+		$result = self::queryDb($query);
+		while($row = mysql_fetch_assoc($result))
 		{
-			redirectTo(LOGIN_PAGE);
+			$directors[] = $row;
 		}
+		return $directors;
 	}
 
-	public static function logout()
+	public static function getDirector($id)
 	{
-		
+		$link = self::openConnection();
+		$query = "";
+		$query .= "SELECT * ";
+		$query .= "FROM `directors` ";
+		$query .= "WHERE `directors`.`id` = {$id} AND `directors`.`active` = 1 ";
+		$query .= "LIMIT 1";
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			return mysql_fetch_assoc($result);
+		}
 	}
 
 
@@ -58,6 +67,7 @@ class GL
 		return self::$pages;
 	}
 
+
 	# GENERAL DB METHODS
 	public static function openConnection()
 	{
@@ -68,9 +78,13 @@ class GL
 		return self::$link;
 	}
 
-	public static function closeDb($db)
+	public static function closeDb()
 	{
-		mysql_close(self::$link);
+		if(self::$link)
+		{
+			mysql_close(self::$link);
+			self::$link = NULL;
+		}
 	}
 
 	public static function mysqlClean($value)
@@ -111,20 +125,28 @@ class GL
 	}
 
 
-	# SELECT METHODS
-	public static function getDirectors()
+	# SESSION METHODS
+	public static function startSession()
 	{
-		$query = "";
-		$query .= "SELECT `directors`.`id`,`directors`.`firstName`,`directors`.`lastName` ";
-		$query .= "FROM `directors` ";
-		$query .= "WHERE `directors`.`active` = 1 ";
-		$query .= "ORDER BY `directors`.`firstName`";
-		$result = self::queryDb($query,self::$link);
-		while($row = mysql_fetch_assoc($result))
+		session_start();
+	}
+
+	public static function isLoggedIn()
+	{
+		return isset($_SESSION['user']);
+	}
+
+	public static function confirmLoggedIn()
+	{
+		if(!self::isLoggedIn())
 		{
-			$directors[] = $row;
+			redirectTo(LOGIN_PAGE);
 		}
-		return $directors;
+	}
+
+	public static function logout()
+	{
+		
 	}
 
 }

@@ -17,6 +17,7 @@ define('ABOUT_DIR',STORAGE_DIR . 'about' . FS);
 define('CSS_DIR',FS . 'css' . FS);
 define('IMG_DIR',FS . 'img' . FS);
 define('JS_DIR',FS . 'js' . FS);
+define('SCRIPT_DIR',FS . 'scripts' . FS);
 define('SWF_DIR',FS . 'swf' . FS);
 
 #CREDITS

@@ -3,6 +3,15 @@ directors.addListeners = function()
 {
 	$('.directorName').click(function()
 	{
-		alert($(this).parent().attr('directorId'));
+		var id = $(this).parent().attr('directorId');
+		//alert($(this).parent().attr('directorId'));
+		$.get('/../scripts/get.php',{'callback':'getDirector','params[]':[id,id]},function(data)
+		{
+			alert(data);
+		});
+	});
+	$('.removeDirectorBtn').click(function()
+	{
+		alert('you clicked remove');
 	});
 }
