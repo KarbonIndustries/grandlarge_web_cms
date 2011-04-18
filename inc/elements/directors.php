@@ -39,5 +39,5 @@
 	</div>
 </div>
 <script type="text/javascript" charset="utf-8">
-	directors.addListeners();
+	directors.init();
 </script>

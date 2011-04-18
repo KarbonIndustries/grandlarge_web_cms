@@ -7,6 +7,48 @@ class GL
 	private static $pages			= array('directors','feeds','notable','about','contact','users','files');
 
 
+	# INSERT METHODS
+	public static function addDirector($info,$returnJSON = true)
+	{
+		if(!is_array($info))
+		{
+			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
+		}
+
+		foreach($info as $row)
+		{
+			$row = self::mysqlClean($row);
+		}
+
+		$info['firstName'] = ucfirst($info['firstName']);
+		$info['lastName']  = ucfirst($info['lastName']);
+
+		$link = self::openConnection();
+		$query = "";
+		$query .= "INSERT INTO `directors` ";
+		$query .= "VALUES(NULL,DEFAULT,'{$info['firstName']}','{$info['lastName']}','{$info['bio']}','{$info['website']}','{$info['description']}')";
+		self::queryDb($query);
+		if(mysql_affected_rows() == 1)
+		{
+			$result['success'] = true;
+			$result['message'] = "Successfully added {$info['firstName']} {$info['lastName']}";
+			$directors = self::getDirectors();
+			$data = '';
+			foreach($directors as $d)
+			{
+				$data .= '<tr directorId="' . $d['id'] . '" class="' . self::altStr('altRow') . '">' . "\n";
+				$data .= "\t" . '<td class="directorName">' . $d['firstName'] . ' ' . $d['lastName'] . '</td>' . "\n";
+				$data .= "\t" . '<td class="removeBtn"><button class="removeDirectorBtn">Remove</button></td>' . "\n";
+				$data .= '</tr>' . "\n";
+			}
+			self::resetAlt();
+			$result['data'] = $data;
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
+	}
+	
+
 	# SELECT METHODS
 	public static function getDirectors()
 	{
@@ -24,9 +66,10 @@ class GL
 		return $directors;
 	}
 
-	public static function getDirector($id)
+	public static function getDirector($id,$returnJSON = true)
 	{
 		$link = self::openConnection();
+		$id = is_array($id) ? $id['id'] : $id;
 		$query = "";
 		$query .= "SELECT * ";
 		$query .= "FROM `directors` ";
@@ -35,8 +78,95 @@ class GL
 		$result = self::queryDb($query);
 		if(mysql_num_rows($result))
 		{
-			return mysql_fetch_assoc($result);
+			$result = mysql_fetch_assoc($result);
+			$result['success'] = true;
+			$result['message'] = '';
+			return $returnJSON ? json_encode($result) : $result;
 		}
+	}
+
+
+	# UPDATE METHODS
+	public static function updateDirector($info,$returnJSON = true)
+	{
+		if(!is_array($info))
+		{
+			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
+		}
+
+		foreach($info as $row)
+		{
+			$row = self::mysqlClean($row);
+		}
+
+		$info['firstName'] = ucfirst($info['firstName']);
+		$info['lastName']  = ucfirst($info['lastName']);
+
+		$link = self::openConnection();
+		$query = "";
+		$query .= "UPDATE `directors` ";
+		$query .= "SET ";
+		$query .= "`directors`.`firstName`   = '{$info['firstName']}', ";
+		$query .= "`directors`.`lastName`    = '{$info['lastName']}', ";
+		$query .= "`directors`.`bio`         = '{$info['bio']}', ";
+		$query .= "`directors`.`websiteURL`  = '{$info['website']}', ";
+		$query .= "`directors`.`description` = '{$info['description']}' ";
+		$query .= "WHERE `directors`.`id` = {$info['id']} AND `directors`.`active` = 1 ";
+		$query .= "LIMIT 1";
+		self::queryDb($query);
+		if(mysql_affected_rows() == 1)
+		{
+			$result['success'] = true;
+			$result['message'] = "Successfully updated {$info['firstName']} {$info['lastName']}";
+			$directors = self::getDirectors();
+			$data = '';
+			foreach($directors as $d)
+			{
+				$data .= '<tr directorId="' . $d['id'] . '" class="' . self::altStr('altRow') . '">' . "\n";
+				$data .= "\t" . '<td class="directorName">' . $d['firstName'] . ' ' . $d['lastName'] . '</td>' . "\n";
+				$data .= "\t" . '<td class="removeBtn"><button class="removeDirectorBtn">Remove</button></td>' . "\n";
+				$data .= '</tr>' . "\n";
+			}
+			self::resetAlt();
+			$result['data'] = $data;
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
+	}
+
+
+	# DELETE METHODS
+	public static function removeDirector($info,$returnJSON = true)
+	{
+		if(!is_array($info))
+		{
+			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
+		}
+
+		$link = self::openConnection();
+		$query = "";
+		$query .= "DELETE FROM `directors` ";
+		$query .= "WHERE `directors`.`id` = {$info['id']} AND `directors`.`active` = 1 ";
+		$query .= "LIMIT 1";
+		self::queryDb($query);
+		if(mysql_affected_rows() == 1)
+		{
+			$result['success'] = true;
+			$result['message'] = "Director successfully removed.";
+			$directors = self::getDirectors();
+			$data = '';
+			foreach($directors as $d)
+			{
+				$data .= '<tr directorId="' . $d['id'] . '" class="' . self::altStr('altRow') . '">' . "\n";
+				$data .= "\t" . '<td class="directorName">' . $d['firstName'] . ' ' . $d['lastName'] . '</td>' . "\n";
+				$data .= "\t" . '<td class="removeBtn"><button class="removeDirectorBtn">Remove</button></td>' . "\n";
+				$data .= '</tr>' . "\n";
+			}
+			self::resetAlt();
+			$result['data'] = $data;
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
 	}
 
 
