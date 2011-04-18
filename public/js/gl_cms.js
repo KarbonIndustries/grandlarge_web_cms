@@ -119,8 +119,8 @@ directors.addSubmitListeners      = function()
 		{
 			if(data.success)
 			{
-					$('#directorTable').html(data.data);
-					d.addTableListeners().resetDirector().clearAddDirectorFields().clearEditDirectorFields();
+				$('#directorTable').html(data.data);
+				d.addTableListeners().resetDirector().clearAddDirectorFields().clearEditDirectorFields();
 			}else
 			{
 				alert(data.message);

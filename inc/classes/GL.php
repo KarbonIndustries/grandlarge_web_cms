@@ -17,6 +17,8 @@ class GL
 			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
 		}
 
+		$link = self::openConnection();
+
 		foreach($info as $row)
 		{
 			$row = self::mysqlClean($row);
@@ -26,7 +28,6 @@ class GL
 		$info['lastName']  = ucfirst($info['lastName']);
 		$info['website']   = strtolower($info['website']);
 
-		$link = self::openConnection();
 		$query = "";
 		$query .= "INSERT INTO `directors` ";
 		$query .= "VALUES(NULL,DEFAULT,'{$info['firstName']}','{$info['lastName']}','{$info['bio']}','{$info['website']}','{$info['description']}')";
@@ -134,6 +135,8 @@ class GL
 			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
 		}
 
+		$link = self::openConnection();
+
 		foreach($info as $row)
 		{
 			$row = self::mysqlClean($row);
@@ -143,7 +146,6 @@ class GL
 		$info['lastName']  = ucfirst($info['lastName']);
 		$info['website']   = strtolower($info['website']);
 
-		$link = self::openConnection();
 		$query = "";
 		$query .= "UPDATE `directors` ";
 		$query .= "SET ";
@@ -196,6 +198,7 @@ class GL
 		}
 
 		$link = self::openConnection();
+
 		$query = "";
 		$query .= "DELETE FROM `directors` ";
 		$query .= "WHERE `directors`.`id` = {$info['id']} AND `directors`.`active` = 1 ";
