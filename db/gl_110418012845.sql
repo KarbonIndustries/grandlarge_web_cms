@@ -4,7 +4,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.37)
 # Database: grandlargeinc_com_teset_site_aplus_net
-# Generation Time: 2011-04-03 20:42:39 -0400
+# Generation Time: 2011-04-18 01:28:49 -0400
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -71,8 +71,8 @@ CREATE TABLE `contacts` (
   KEY `companyName` (`companyName`),
   KEY `officeLocale` (`officeLocale`),
   KEY `officeCategoryID` (`officeCategoryID`),
-  CONSTRAINT `contacts_ibfk_2` FOREIGN KEY (`officeCategoryID`) REFERENCES `officecategories` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`stateID`) REFERENCES `states` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`stateID`) REFERENCES `states` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `contacts_ibfk_3` FOREIGN KEY (`officeCategoryID`) REFERENCES `officecategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `contacts` WRITE;
@@ -106,7 +106,7 @@ CREATE TABLE `directors` (
   KEY `active` (`active`),
   KEY `firstName` (`firstName`),
   KEY `lastName` (`lastName`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `directors` WRITE;
 /*!40000 ALTER TABLE `directors` DISABLE KEYS */;
@@ -195,8 +195,8 @@ CREATE TABLE `mediaFeeds` (
   PRIMARY KEY (`id`),
   KEY `mediaCategoryID` (`mediaCategoryID`),
   KEY `directorID` (`directorID`),
-  CONSTRAINT `mediafeeds_ibfk_2` FOREIGN KEY (`mediaCategoryID`) REFERENCES `mediacategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `mediafeeds_ibfk_1` FOREIGN KEY (`directorID`) REFERENCES `directors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `mediafeeds_ibfk_1` FOREIGN KEY (`directorID`) REFERENCES `directors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mediafeeds_ibfk_2` FOREIGN KEY (`mediaCategoryID`) REFERENCES `mediacategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `mediaFeeds` WRITE;
@@ -304,7 +304,7 @@ CREATE TABLE `officeCategories` (
   `id` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(40) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `officeCategories` WRITE;
 /*!40000 ALTER TABLE `officeCategories` DISABLE KEYS */;
