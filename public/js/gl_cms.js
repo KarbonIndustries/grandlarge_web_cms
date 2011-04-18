@@ -16,7 +16,7 @@ var files     = {};
 // ERROR MESSAGES
 
 // OBJECT METHODS
-directors.init               = function()
+directors.init                    = function()
 {
 	var d                 = this;
 	d.errors              = {};
@@ -31,7 +31,7 @@ directors.init               = function()
 	return d;
 }
 
-directors.addTableListeners  = function()
+directors.addTableListeners       = function()
 {
 	var d = this;
 
@@ -94,7 +94,7 @@ directors.addTableListeners  = function()
 	return d;
 }
 
-directors.addSubmitListeners = function()
+directors.addSubmitListeners      = function()
 {
 	var d = this;
 
@@ -204,4 +204,9 @@ directors.clearEditDirectorFields = function()
 	return d;
 }
 
+
+contact.init                      = function()
+{
+	
+}
 //end

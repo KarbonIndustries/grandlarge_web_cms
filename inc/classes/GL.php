@@ -7,7 +7,9 @@ class GL
 	private static $pages			= array('directors','feeds','notable','about','contact','users','files');
 
 
+	#====================================================================================
 	# INSERT METHODS
+	#====================================================================================
 	public static function addDirector($info,$returnJSON = true)
 	{
 		if(!is_array($info))
@@ -22,6 +24,7 @@ class GL
 
 		$info['firstName'] = ucfirst($info['firstName']);
 		$info['lastName']  = ucfirst($info['lastName']);
+		$info['website']   = strtolower($info['website']);
 
 		$link = self::openConnection();
 		$query = "";
@@ -47,9 +50,20 @@ class GL
 		}
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
 	}
-	
 
+	public static function addOfficeCategory($info,$returnJSON = true)
+	{
+		
+	}
+	
+	public static function addOffice($info,$returnJSON = true)
+	{
+		
+	}
+
+	#====================================================================================
 	# SELECT METHODS
+	#====================================================================================
 	public static function getDirectors()
 	{
 		$link = self::openConnection();
@@ -57,7 +71,7 @@ class GL
 		$query .= "SELECT `directors`.`id`,`directors`.`firstName`,`directors`.`lastName` ";
 		$query .= "FROM `directors` ";
 		$query .= "WHERE `directors`.`active` = 1 ";
-		$query .= "ORDER BY `directors`.`firstName`";
+		$query .= "ORDER BY `directors`.`firstName` ASC";
 		$result = self::queryDb($query);
 		while($row = mysql_fetch_assoc($result))
 		{
@@ -66,10 +80,10 @@ class GL
 		return $directors;
 	}
 
-	public static function getDirector($id,$returnJSON = true)
+	public static function getDirector($info,$returnJSON = true)
 	{
 		$link = self::openConnection();
-		$id = is_array($id) ? $id['id'] : $id;
+		$id = is_array($info) ? $info['id'] : $info;
 		$query = "";
 		$query .= "SELECT * ";
 		$query .= "FROM `directors` ";
@@ -85,8 +99,34 @@ class GL
 		}
 	}
 
+	public static function getOfficeCategories()
+	{
+		$link = self::openConnection();
+		$query = "";
+		$query .= "SELECT * ";
+		$query .= "FROM `officeCategories` ";
+		$query .= "ORDER BY `officeCategories`.`name` ASC";
+		$result = self::queryDb($query);
+		while($row = mysql_fetch_assoc($result))
+		{
+			$offices[] = $row;
+		}
+		return $offices;
+	}
 
+	public static function getOffices($returnJSON = true)
+	{
+		
+	}
+
+	public static function getOffice($info,$returnJSON = true)
+	{
+		
+	}
+
+	#====================================================================================
 	# UPDATE METHODS
+	#====================================================================================
 	public static function updateDirector($info,$returnJSON = true)
 	{
 		if(!is_array($info))
@@ -101,6 +141,7 @@ class GL
 
 		$info['firstName'] = ucfirst($info['firstName']);
 		$info['lastName']  = ucfirst($info['lastName']);
+		$info['website']   = strtolower($info['website']);
 
 		$link = self::openConnection();
 		$query = "";
@@ -134,8 +175,19 @@ class GL
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
 	}
 
+	public static function updateOfficeCategory($info,$returnJSON = true)
+	{
+		
+	}
 
+	public static function updateOffice($info,$returnJSON = true)
+	{
+		
+	}
+
+	#====================================================================================
 	# DELETE METHODS
+	#====================================================================================
 	public static function removeDirector($info,$returnJSON = true)
 	{
 		if(!is_array($info))
@@ -169,8 +221,19 @@ class GL
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
 	}
 
+	public static function removeOfficeCategory($info,$returnJSON = true)
+	{
+		
+	}
 
+	public static function removeOffice($info,$returnJSON = true)
+	{
+		
+	}
+
+	#====================================================================================
 	# GENERAL METHODS
+	#====================================================================================
 	public static function redirectTo($url = NULL)
 	{
 		if(isset($url))
@@ -197,8 +260,9 @@ class GL
 		return self::$pages;
 	}
 
-
+	#====================================================================================
 	# GENERAL DB METHODS
+	#====================================================================================
 	public static function openConnection()
 	{
 		self::$link = isset(self::$link) ? self::$link : mysql_connect(DB_HOST,DB_USER,DB_PASS);
@@ -254,8 +318,9 @@ class GL
 		}
 	}
 
-
+	#====================================================================================
 	# SESSION METHODS
+	#====================================================================================
 	public static function startSession()
 	{
 		session_start();
