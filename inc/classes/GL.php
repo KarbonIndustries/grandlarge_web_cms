@@ -19,9 +19,9 @@ class GL
 
 		$link = self::openConnection();
 
-		foreach($info as $row)
+		foreach($info as $key => $val)
 		{
-			$row = self::mysqlClean($row);
+			$info[$key] = self::mysqlClean($val);
 		}
 
 		$info['firstName'] = ucfirst($info['firstName']);
@@ -54,7 +54,41 @@ class GL
 
 	public static function addOfficeCategory($info,$returnJSON = true)
 	{
+		if(!is_array($info))
+		{
+			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
+		}
+
+		$link = self::openConnection();
+
+		foreach($info as $key => $val)
+		{
+			$info[$key] = self::mysqlClean(ucwords($val));
+		}
 		
+		$query   = "";
+		$query  .= "INSERT IGNORE INTO `officeCategories` (`name`) ";
+		$query  .= "VALUES('{$info['name']}')";
+		self::queryDb($query);
+		if(mysql_affected_rows())
+		{
+			$categories = self::getOfficeCategories();
+			$data       = '';
+			foreach($categories as $c)
+			{
+				$data .= '<tr officeCategoryId="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+					$data .= '<td class="officeCategoryName"><input type="text" name="name' . $c['id'] . '" id="' . $c['id'] . '" value="' . $c['name'] . '" /></td>';
+					$data .= '<td class="removeBtn"><button class="removeOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Remove</button></td>';
+					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
+				$data .= '</tr>';
+			}
+			self::resetAlt();
+			$result['success'] = true;
+			$result['message'] = $info['name'] . ' was successfully added.';
+			$result['data']    = $data;
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
 	}
 	
 	public static function addOffice($info,$returnJSON = true)
@@ -110,9 +144,9 @@ class GL
 		$result = self::queryDb($query);
 		while($row = mysql_fetch_assoc($result))
 		{
-			$offices[] = $row;
+			$categories[] = $row;
 		}
-		return $offices;
+		return $categories;
 	}
 
 	public static function getOffices($returnJSON = true)
@@ -137,9 +171,9 @@ class GL
 
 		$link = self::openConnection();
 
-		foreach($info as $row)
+		foreach($info as $key => $val)
 		{
-			$row = self::mysqlClean($row);
+			$info[$key] = self::mysqlClean($val);
 		}
 
 		$info['firstName'] = ucfirst($info['firstName']);
@@ -179,7 +213,43 @@ class GL
 
 	public static function updateOfficeCategory($info,$returnJSON = true)
 	{
+		if(!is_array($info))
+		{
+			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
+		}
+
+		$link = self::openConnection();
+
+		foreach($info as $key => $val)
+		{
+			$info[$key] = self::mysqlClean(ucwords($val));
+		}
 		
+		$query   = "";
+		$query  .= "UPDATE IGNORE `officeCategories` ";
+		$query  .= "SET `officeCategories`.`name` = '{$info['name']}' ";
+		$query  .= "WHERE `officeCategories`.`id` = {$info['id']} ";
+		$query  .= "LIMIT 1";
+		self::queryDb($query);
+		if(mysql_affected_rows() == 1)
+		{
+			$categories = self::getOfficeCategories();
+			$data       = '';
+			foreach($categories as $c)
+			{
+				$data .= '<tr officeCategoryId="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+					$data .= '<td class="officeCategoryName"><input type="text" name="name' . $c['id'] . '" id="' . $c['id'] . '" value="' . $c['name'] . '" /></td>';
+					$data .= '<td class="removeBtn"><button class="removeOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Remove</button></td>';
+					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
+				$data .= '</tr>';
+			}
+			self::resetAlt();
+			$result['success'] = true;
+			$result['message'] = 'Category was successfully updated.';
+			$result['data']    = $data;
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
 	}
 
 	public static function updateOffice($info,$returnJSON = true)
@@ -221,12 +291,42 @@ class GL
 			$result['data'] = $data;
 			return $returnJSON ? json_encode($result) : $result;
 		}
-		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'There was an error removing the director.')) : false;
 	}
 
 	public static function removeOfficeCategory($info,$returnJSON = true)
 	{
-		
+		if(!is_array($info))
+		{
+			return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid info.')) : false;
+		}
+
+		$link = self::openConnection();
+
+		$query   = "";
+		$query  .= "DELETE FROM `officeCategories` ";
+		$query  .= "WHERE `officeCategories`.`id` = {$info['id']} ";
+		$query  .= "LIMIT 1";
+		self::queryDb($query);
+		if(mysql_affected_rows() == 1)
+		{
+			$categories = self::getOfficeCategories();
+			$data       = '';
+			foreach($categories as $c)
+			{
+				$data .= '<tr officeCategoryId="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+					$data .= '<td class="officeCategoryName"><input type="text" name="name' . $c['id'] . '" id="' . $c['id'] . '" value="' . $c['name'] . '" /></td>';
+					$data .= '<td class="removeBtn"><button class="removeOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Remove</button></td>';
+					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
+				$data .= '</tr>';
+			}
+			self::resetAlt();
+			$result['success'] = true;
+			$result['message'] = 'Category successfully removed.';
+			$result['data']    = $data;
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		return $returnJSON ? json_encode(array('success' => false,'message' => 'There was an error removing the category.')) : false;
 	}
 
 	public static function removeOffice($info,$returnJSON = true)

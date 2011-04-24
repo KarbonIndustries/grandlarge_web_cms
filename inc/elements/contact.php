@@ -9,7 +9,7 @@
 	foreach($categories as $c)
 	{?>
 		<tr officeCategoryId="<?= $c['id'] ?>" class="<?= GL::altStr('altRow') ?>">
-			<td class="officeCategoryName"><input type="text" name="" id="<?= $c['id'] ?>" value="<?= $c['name'] ?>" /></td>
+			<td class="officeCategoryName"><input type="text" name="name<?= $c['id'] ?>" id="<?= $c['id'] ?>" value="<?= $c['name'] ?>" /></td>
 			<td class="removeBtn"><button class="removeOfficeCategoryBtn" name="<?= $c['name'] ?>" id="<?= $c['id'] ?>">Remove</button></td>
 			<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="<?= $c['name'] ?>" id="<?= $c['id'] ?>">Update</button></td>
 		</tr>
@@ -18,7 +18,7 @@
 	GL::resetAlt();
 	?>
 	</table>
-	<div id="addBtnShell"><label for="category"><input type="text" name="category" id="category" /></label><button id="addOfficeCategoryBtn">Add</button></div>
+	<div id="addBtnShell"><label for="category"><input type="text" name="categoryName" id="categoryName" /></label><button id="addOfficeCategoryBtn">Add</button></div>
 </div>
 
 <div>

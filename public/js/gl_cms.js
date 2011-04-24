@@ -13,25 +13,23 @@ var contact   = {};
 var users     = {};
 var files     = {};
 
-// ERROR MESSAGES
-
 // OBJECT METHODS
-directors.init                    = function()
+directors.init                          = function()
 {
-	var d                 = this;
-	d.errors              = {};
-	d.errors.addError     = 'You must specify a first name.';
-	d.errors.getError     = 'There was an error retrieving info for the director you requested.';
-	d.errors.updateError1 = 'You cannot update a director without changing their info.';
-	d.errors.updateError2 = 'You must specify a first name.';
+	var d                = this;
+	d.errors             = {};
+	d.errors.add         = 'You must specify a first name.';
+	d.errors.get         = 'There was an error retrieving the director you requested.';
+	d.errors.update1     = 'You cannot update a director without changing their info.';
+	d.errors.update2     = 'You must specify a first name.';
 	d.resetDirector();
-	d.addDirectorFields   = $('#addDirectorShell #firstName,#addDirectorShell #lastName,#addDirectorShell #bio,#addDirectorShell #description,#addDirectorShell #website');
-	d.editDirectorFields  = $('#editDirectorShell #firstName,#editDirectorShell #lastName,#editDirectorShell #bio,#editDirectorShell #description,#editDirectorShell #website');
+	d.addDirectorFields  = $('#addDirectorShell #firstName,#addDirectorShell #lastName,#addDirectorShell #bio,#addDirectorShell #description,#addDirectorShell #website');
+	d.editDirectorFields = $('#editDirectorShell #firstName,#editDirectorShell #lastName,#editDirectorShell #bio,#editDirectorShell #description,#editDirectorShell #website');
 	d.addTableListeners().addSubmitListeners();
 	return d;
 }
 
-directors.addTableListeners       = function()
+directors.addTableListeners             = function()
 {
 	var d = this;
 
@@ -39,7 +37,7 @@ directors.addTableListeners       = function()
 	$('.directorName').click(function()
 	{
 		var params = {};
-		params.id = $(this).parent().attr('directorId');
+		params.id  = $(this).parent().attr('directorId');
 		
 		$.get(AJAX_FILE,{callback:'getDirector',params:params},function(data)
 		{
@@ -58,7 +56,7 @@ directors.addTableListeners       = function()
 				$('#editDirectorShell #website').val(data.websiteURL);
 			}else
 			{
-				alert(d.errors.getError);
+				alert(d.errors.get);
 			}
 		},'json');
 	});
@@ -66,12 +64,12 @@ directors.addTableListeners       = function()
 	// REMOVE DIRECTOR
 	$('.removeDirectorBtn').click(function()
 	{
-		var params = {};
-		params.id = $(this).parent().parent().attr('directorId');
+		var params       = {};
+		params.id        = $(this).parent().parent().attr('directorId');
 		var directorName = $(this).parent().prev().text();
 		
 		// confirm delete
-		if(!confirm('Are you sure you want to remove ' + directorName))
+		if(!confirm('Are you sure you want to remove ' + directorName + '?'))
 		{
 			return;
 		}
@@ -81,9 +79,8 @@ directors.addTableListeners       = function()
 			if(data.success)
 			{
 				$('#directorTable').html(data.data);
-				d.addTableListeners();
-				d.resetDirector();
-				$('#editDirectorShell #firstName,#editDirectorShell #lastName,#editDirectorShell #bio,#editDirectorShell #description,#editDirectorShell #website').val('');
+				d.addTableListeners().resetDirector();
+				d.editDirectorFields.val('');
 			}else
 			{
 				alert(data.message);
@@ -94,7 +91,7 @@ directors.addTableListeners       = function()
 	return d;
 }
 
-directors.addSubmitListeners      = function()
+directors.addSubmitListeners            = function()
 {
 	var d = this;
 
@@ -108,10 +105,10 @@ directors.addSubmitListeners      = function()
 		params.description = $.trim($('#addDirectorShell #description').val());
 		params.website     = $.trim($('#addDirectorShell #website').val());
 
-		// check that first name contains value
+		// confirm first name contains value
 		if(params.firstName == '')
 		{
-			alert(d.errors.addError);
+			alert(d.errors.add);
 			return;
 		}
 
@@ -138,14 +135,14 @@ directors.addSubmitListeners      = function()
 		params.description = $.trim($('#editDirectorShell #description').val());
 		params.website     = $.trim($('#editDirectorShell #website').val());
 
-		// check that first name contains value
+		// confirm first name contains value
 		if(params.firstName == '')
 		{
-			alert(d.errors.updateError2);
+			alert(d.errors.update2);
 			return;
 		}
 
-		// check that id is set and info has been changed
+		// confirm id is set and info has been changed
 		if(d.currentDirector.id && (
 		d.currentDirector.firstName   != params.firstName   || 
 		d.currentDirector.lastName    != params.lastName    || 
@@ -168,14 +165,14 @@ directors.addSubmitListeners      = function()
 			},'json');
 		}else
 		{
-			alert(d.errors.updateError1);
+			alert(d.errors.update1);
 		}
 	});
 
 	return d;
 }
 
-directors.resetDirector           = function()
+directors.resetDirector                 = function()
 {
 	var d = this;
 
@@ -190,14 +187,14 @@ directors.resetDirector           = function()
 	return d;
 }
 
-directors.clearAddDirectorFields  = function()
+directors.clearAddDirectorFields        = function()
 {
 	var d = this;
 	d.addDirectorFields.val('');
 	return d;
 }
 
-directors.clearEditDirectorFields = function()
+directors.clearEditDirectorFields       = function()
 {
 	var d = this;
 	d.editDirectorFields.val('');
@@ -205,8 +202,124 @@ directors.clearEditDirectorFields = function()
 }
 
 
-contact.init                      = function()
+contact.init                            = function()
 {
+	var c    = this;
+
+	c.errors = {};
+	c.errors.removeCategory = 'There was an error deleting the category.';
+	c.errors.updateCategory = 'You must enter category name.';
+	c.errors.addCategory    = 'You must enter category name.';
+	c.addOfficeCategoryTableListeners().addOfficeTableListeners().addSubmitOfficeCategoryListener().addSubmitOfficeListener();
+
+	return c;
+}
+
+contact.addOfficeCategoryTableListeners = function()
+{
+	var c = this;
+
+	// REMOVE CATEGORY
+	$("#officeCategoryTable :button.removeOfficeCategoryBtn").click(function()
+	{
+		var name = $(":input[name=name" + $(this).attr('id') + "]").val();
+		var params = {};
+		params.id  = $(this).attr('id');
+
+		// confirm delete
+		if(!confirm('Are you sure you want to remove this category?'))
+		{
+			return;
+		}
+
+		$.get(AJAX_FILE,{callback:'removeOfficeCategory',params:params},function(data)
+		{
+			if(data.success)
+			{
+				$('#officeCategoryTable').html(data.data);
+				c.addOfficeCategoryTableListeners();
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	});
+
+	// UPDATE CATEGORY
+	$("#officeCategoryTable :button.updateOfficeCategoryBtn").click(function()
+	{
+		var params  = {};
+		params.id   = $(this).attr('id');
+		params.name = $.trim($(":input[name=name" + $(this).attr('id') + "]").val());
+
+		if(params.name == '')
+		{
+			alert(c.errors.updateCategory);
+			return;
+		}
+
+		$.get(AJAX_FILE,{callback:'updateOfficeCategory',params:params},function(data)
+		{
+			if(data.success)
+			{
+				$('#officeCategoryTable').html(data.data);
+				c.addOfficeCategoryTableListeners();
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	});
+
+	return c;
+}
+
+contact.addOfficeTableListeners         = function()
+{
+	var c = this;
 	
+	return c;
+}
+
+contact.addSubmitOfficeCategoryListener = function()
+{
+	var c = this;
+
+	// ADD CATEGORY
+	$(":button#addOfficeCategoryBtn").click(function()
+	{
+		var input   = $("#addBtnShell :text#categoryName");
+		var params  = {};
+		params.name = $.trim(input.val());
+
+		// confirm name contains value
+		if(params.name == '')
+		{
+			alert(c.errors.addCategory);
+			return;
+		}
+
+		$.get(AJAX_FILE,{callback:'addOfficeCategory',params:params},function(data)
+		{
+			if(data.success)
+			{
+				$('#officeCategoryTable').html(data.data);
+				c.addOfficeCategoryTableListeners();
+				input.val('');
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	});
+
+	return c;
+}
+
+contact.addSubmitOfficeListener         = function()
+{
+	var c = this;
+	
+	return c;
 }
 //end
