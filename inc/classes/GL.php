@@ -125,13 +125,17 @@ class GL
 		$query .= "WHERE `directors`.`id` = {$id} AND `directors`.`active` = 1 ";
 		$query .= "LIMIT 1";
 		$result = self::queryDb($query);
-		if(mysql_num_rows($result))
+		if(mysql_num_rows($result) == 1)
 		{
-			$result = mysql_fetch_assoc($result);
+			$result            = mysql_fetch_assoc($result);
 			$result['success'] = true;
 			$result['message'] = '';
 			return $returnJSON ? json_encode($result) : $result;
 		}
+		$result            = array();
+		$result['success'] = false;
+		$result['message'] = "The director you requested doesn't exist.";
+		return $returnJSON ? json_encode($result) : $result;
 	}
 
 	public static function getOfficeCategories()
@@ -142,21 +146,73 @@ class GL
 		$query .= "FROM `officeCategories` ";
 		$query .= "ORDER BY `officeCategories`.`name` ASC";
 		$result = self::queryDb($query);
-		while($row = mysql_fetch_assoc($result))
+		if(mysql_num_rows($result))
 		{
-			$categories[] = $row;
+			while($row = mysql_fetch_assoc($result))
+			{
+				$categories[] = $row;
+			}
+			return $categories;
 		}
-		return $categories;
+		return false;
 	}
 
-	public static function getOffices($returnJSON = true)
+	public static function getOffices()
 	{
-		
+		$link = self::openConnection();
+		$query = "SELECT * FROM `contacts` ";
+		$query .= "ORDER BY `contacts`.`companyName` ASC";
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			while($row = mysql_fetch_assoc($result))
+			{
+				$offices[] = $row;
+			}
+			return $offices;
+		}
+		return false;
 	}
 
 	public static function getOffice($info,$returnJSON = true)
 	{
-		
+		$link = self::openConnection();
+		$id = is_array($info) ? $info['id'] : $info;
+		$query = "";
+		$query .= "SELECT * ";
+		$query .= "FROM `contacts` ";
+		$query .= "WHERE `contacts`.`id` = {$id} ";
+		$query .= "LIMIT 1";
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result) == 1)
+		{
+			$result            = mysql_fetch_assoc($result);
+			$result['success'] = true;
+			$result['message'] = '';
+			return $returnJSON ? json_encode($result) : $result;
+		}
+		$result            = array();
+		$result['success'] = false;
+		$result['message'] = "The office you requested doesn't exist.";
+		return $returnJSON ? json_encode($result) : $result;
+	}
+
+	public static function getStates()
+	{
+		$link    = self::openConnection();
+		$query   = "SELECT * FROM `states` ";
+		$query  .= "ORDER BY `states`.`abbreviation` ASC";
+		$result  = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			while($row = mysql_fetch_assoc($result))
+			{
+				$row['abbreviation'] = $row['abbreviation'] == '' ? 'N/A' : $row['abbreviation'];
+				$states[] = $row;
+			}
+			return $states;
+		}
+		return false;
 	}
 
 	#====================================================================================

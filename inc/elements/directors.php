@@ -6,7 +6,7 @@
 	<div><label for="lastName">Last Name</label><input type="text" name="lastName" id="lastName" /></div>
 	<div><label for="bio">Bio</label><textarea name="bio" id="bio" rows="6"></textarea></div>
 	<div><label for="description">Description</label><input type="text" name="description" id="description" /></div>
-	<div><label for="website">Web Site</label><input type="text" name="website" id="website" /></div>
+	<div><label for="website">Website</label><input type="text" name="website" id="website" /></div>
 	<div id="addBtnShell"><button id="addDirectorBtn"></button></div>
 </div>
 
@@ -34,7 +34,7 @@
 		<div><label for="lastName">Last Name</label><input type="text" name="lastName" id="lastName" /></div>
 		<div><label for="bio">Bio</label><textarea name="bio" id="bio" rows="6"></textarea></div>
 		<div><label for="description">Description</label><input type="text" name="description" id="description" /></div>
-		<div><label for="website">Web Site</label><input type="text" name="website" id="website" /></div>
+		<div><label for="website">Website</label><input type="text" name="website" id="website" /></div>
 		<div id="updateBtnShell"><button id="updateDirectorBtn"></button></div>
 	</div>
 </div>

@@ -2,8 +2,6 @@
 var SCRIPT_DIR = '/../scripts/';
 var AJAX_FILE = SCRIPT_DIR + 'ajax.php';
 
-// VARIABLES
-
 // OBJECTS
 var directors = {};
 var feeds     = {};
@@ -13,7 +11,7 @@ var contact   = {};
 var users     = {};
 var files     = {};
 
-// OBJECT METHODS
+// DIRECTORS
 directors.init                          = function()
 {
 	var d                = this;
@@ -201,15 +199,16 @@ directors.clearEditDirectorFields       = function()
 	return d;
 }
 
-
+// CONTACT
 contact.init                            = function()
 {
 	var c    = this;
 
 	c.errors = {};
 	c.errors.removeCategory = 'There was an error deleting the category.';
-	c.errors.updateCategory = 'You must enter category name.';
-	c.errors.addCategory    = 'You must enter category name.';
+	c.errors.updateCategory = 'You must enter a category name.';
+	c.errors.addCategory    = 'You must enter a category name.';
+	c.errors.addContact1    = 'You must enter an office name and a company name.';
 	c.addOfficeCategoryTableListeners().addOfficeTableListeners().addSubmitOfficeCategoryListener().addSubmitOfficeListener();
 
 	return c;
@@ -319,7 +318,48 @@ contact.addSubmitOfficeCategoryListener = function()
 contact.addSubmitOfficeListener         = function()
 {
 	var c = this;
-	
+
+	// ADD OFFICE
+	$(':button#addOfficeBtn').click(function()
+	{
+		var params               = {};
+		params.officeLocale      = $.trim($('#addOfficeShell :text#officeName').val());
+		params.companyName       = $.trim($('#addOfficeShell :text#companyName').val());
+		params.address1          = $.trim($('#addOfficeShell :text#address1').val());
+		params.address2          = $.trim($('#addOfficeShell :text#address2').val());
+		params.address3          = $.trim($('#addOfficeShell :text#address3').val());
+		params.city              = $.trim($('#addOfficeShell :text#city').val());
+		params.stateID           = $.trim($('#addOfficeShell select#state').val());
+		params.zip               = $.trim($('#addOfficeShell :text#zip').val());
+		params.country           = $.trim($('#addOfficeShell :text#country').val());
+		params.contact1FirstName = $.trim($('#addOfficeShell :text#contact1FirstName').val());
+		params.contact1LastName  = $.trim($('#addOfficeShell :text#contact1LastName').val());
+		params.contact2FirstName = $.trim($('#addOfficeShell :text#contact2FirstName').val());
+		params.contact2LastName  = $.trim($('#addOfficeShell :text#contact2LastName').val());
+		params.contact3FirstName = $.trim($('#addOfficeShell :text#contact3FirstName').val());
+		params.contact3LastName  = $.trim($('#addOfficeShell :text#contact3LastName').val());
+		params.phone             = $.trim($('#addOfficeShell :text#phone').val());
+		params.email             = $.trim($('#addOfficeShell :text#email').val());
+		params.websiteURL        = $.trim($('#addOfficeShell :text#websiteURL').val());
+
+		if(params.officeLocale == '' || params.companyName == '')
+		{
+			alert(c.errors.addContact1);
+			return;
+		}
+
+		$.get(AJAX_FILE,{callback:'addOffice',params:params},function(data)
+		{
+			if(data.success)
+			{
+				
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	});
+
 	return c;
 }
 //end
