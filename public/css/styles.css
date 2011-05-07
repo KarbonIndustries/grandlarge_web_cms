@@ -47,7 +47,7 @@ ul{list-style-type:none;padding:0;}
 		#addOfficeShell .labelDiv{float:left;}
 		#addOfficeShell label{font-weight:bold;width:150px;display:block;float:left;/**/text-align:right;padding-right:20px;}
 		#addOfficeShell input{width:200px;/*float:left;*/margin-right:10px;}
-		#addOfficeShell select{width:80px;}
+/*		#addOfficeShell select{width:80px;}*/
 		#addOfficeShell #addBtnShell{text-align:right;width:750px;margin-top:10px;}
 		#addOfficeShell #addOfficeBtn{background:url('/img/sprites.png') no-repeat scroll 0 0 transparent;border:none;width:84px;height:38px;}
 		#officeTable tr{cursor:pointer;}

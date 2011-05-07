@@ -204,11 +204,17 @@ contact.init                            = function()
 {
 	var c    = this;
 
-	c.errors = {};
-	c.errors.removeCategory = 'There was an error deleting the category.';
-	c.errors.updateCategory = 'You must enter a category name.';
-	c.errors.addCategory    = 'You must enter a category name.';
-	c.errors.addContact1    = 'You must enter an office name and a company name.';
+	c.errors          = {};
+	ce                = c.errors;
+	ce.removeCategory = 'There was an error deleting the category.';
+	ce.updateCategory = 'You must enter a category name.';
+	ce.addCategory    = 'You must enter a category name.';
+	ce.addContact1    = 'You must enter an office category, an office name and a company name.';
+
+	c.objects = {};
+	co        = c.objects;
+	co.addOfficeFields = $(':text#officeName,:text#companyName,:text#address1,:text#address2,:text#address3,:text#city,:text#zip,:text#country,:text#contact1FirstName,:text#contact1LastName,:text#contact2FirstName,:text#contact2LastName,:text#contact3FirstName,:text#contact3LastName,','#addOfficeShell,:text#phone,:text#email,:text#websiteURL');
+
 	c.addOfficeCategoryTableListeners().addOfficeTableListeners().addSubmitOfficeCategoryListener().addSubmitOfficeListener();
 
 	return c;
@@ -236,6 +242,7 @@ contact.addOfficeCategoryTableListeners = function()
 			if(data.success)
 			{
 				$('#officeCategoryTable').html(data.data);
+				$('#officeCategoryId','#addOfficeShell').html(data.data2);
 				c.addOfficeCategoryTableListeners();
 			}else
 			{
@@ -262,6 +269,7 @@ contact.addOfficeCategoryTableListeners = function()
 			if(data.success)
 			{
 				$('#officeCategoryTable').html(data.data);
+				$('#officeCategoryId','#addOfficeShell').html(data.data2);
 				c.addOfficeCategoryTableListeners();
 			}else
 			{
@@ -302,7 +310,8 @@ contact.addSubmitOfficeCategoryListener = function()
 		{
 			if(data.success)
 			{
-				$('#officeCategoryTable').html(data.data);
+				$('#officeCategoryTable','#officeCategoryShell').html(data.data);
+				$('#officeCategoryId','#addOfficeShell').html(data.data2);
 				c.addOfficeCategoryTableListeners();
 				input.val('');
 			}else
@@ -323,13 +332,14 @@ contact.addSubmitOfficeListener         = function()
 	$(':button#addOfficeBtn').click(function()
 	{
 		var params               = {};
+		params.officeCategoryID  = $('#addOfficeShell select#officeCategoryId').val();
 		params.officeLocale      = $.trim($('#addOfficeShell :text#officeName').val());
 		params.companyName       = $.trim($('#addOfficeShell :text#companyName').val());
 		params.address1          = $.trim($('#addOfficeShell :text#address1').val());
 		params.address2          = $.trim($('#addOfficeShell :text#address2').val());
 		params.address3          = $.trim($('#addOfficeShell :text#address3').val());
 		params.city              = $.trim($('#addOfficeShell :text#city').val());
-		params.stateID           = $.trim($('#addOfficeShell select#state').val());
+		params.stateID           = $('#addOfficeShell select#state').val();
 		params.zip               = $.trim($('#addOfficeShell :text#zip').val());
 		params.country           = $.trim($('#addOfficeShell :text#country').val());
 		params.contact1FirstName = $.trim($('#addOfficeShell :text#contact1FirstName').val());
@@ -342,7 +352,7 @@ contact.addSubmitOfficeListener         = function()
 		params.email             = $.trim($('#addOfficeShell :text#email').val());
 		params.websiteURL        = $.trim($('#addOfficeShell :text#websiteURL').val());
 
-		if(params.officeLocale == '' || params.companyName == '')
+		if(params.officeLocale == '' || params.companyName == '' || params.officeCategoryID == '')
 		{
 			alert(c.errors.addContact1);
 			return;
@@ -352,7 +362,8 @@ contact.addSubmitOfficeListener         = function()
 		{
 			if(data.success)
 			{
-				
+				$('#officeTable','#editOfficeShell').html(data.data);
+				c.resetAddOfficeFields();
 			}else
 			{
 				alert(data.message);
@@ -362,4 +373,25 @@ contact.addSubmitOfficeListener         = function()
 
 	return c;
 }
+
+contact.resetAddOfficeFields = function()
+{
+	var c = this;
+	var co = c.objects;
+	co.addOfficeFields.val('');
+
+	return c;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 //end

@@ -66,6 +66,8 @@ class GL
 			$info[$key] = self::mysqlClean(ucwords($val));
 		}
 		
+		$info['name'] = ucwords(strtolower($info['name']));
+
 		$query   = "";
 		$query  .= "INSERT IGNORE INTO `officeCategories` (`name`) ";
 		$query  .= "VALUES('{$info['name']}')";
@@ -82,10 +84,17 @@ class GL
 					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
 				$data .= '</tr>';
 			}
+			$data2 = '<option value="" selected="selected">Select an office category</option>';
+			foreach($categories as $c)
+			{
+				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
+			}
+			
 			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = $info['name'] . ' was successfully added.';
 			$result['data']    = $data;
+			$result['data2']   = $data2;
 			return $returnJSON ? json_encode($result) : $result;
 		}
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
@@ -94,6 +103,65 @@ class GL
 	public static function addOffice($info,$returnJSON = true)
 	{
 		
+		if(!is_array($info))
+		{
+			$result['success'] = false;
+			$result['message'] = 'Invalid info';
+			return $returnJSON ? json_encode($result) : false;
+		}
+
+		$link = self::openConnection();
+
+		foreach($info as $key => $val)
+		{
+			$info[$key] = self::mysqlClean($val);
+		}
+
+		$info['officeLocale']      = ucwords(strtolower($info['officeLocale']));
+		$info['companyName']       = ucwords(strtolower($info['companyName']));
+		$info['address1']          = ucwords(strtolower($info['address1']));
+		$info['address2']          = ucwords(strtolower($info['address2']));
+		$info['address3']          = ucwords(strtolower($info['address3']));
+		$info['city']              = ucwords(strtolower($info['city']));
+		$info['country']           = ucwords($info['country']);
+		$info['contact1FirstName'] = ucwords(strtolower($info['contact1FirstName']));
+		$info['contact1LastName']  = ucwords(strtolower($info['contact1LastName']));
+		$info['contact2FirstName'] = ucwords(strtolower($info['contact2FirstName']));
+		$info['contact2LastName']  = ucwords(strtolower($info['contact2LastName']));
+		$info['contact3FirstName'] = ucwords(strtolower($info['contact3FirstName']));
+		$info['contact3LastName']  = ucwords(strtolower($info['contact3LastName']));
+		$info['email']             = strtolower($info['email']);
+		$info['websiteURL']        = strtolower($info['websiteURL']);
+
+		$query  = "INSERT INTO `contacts` (`officeCategoryID`,`officeLocale`,`companyName`,`address1`,`address2`,`address3`,`city`,`stateID`,`zip`,`country`,`contact1FirstName`,`contact1LastName`,`contact2FirstName`,`contact2LastName`,`contact3FirstName`,`contact3LastName`,`phone`,`email`,`websiteURL`) ";
+		$query .= "VALUES ('{$info['officeCategoryID']}','{$info['officeLocale']}','{$info['companyName']}','{$info['address1']}','{$info['address2']}','{$info['address3']}','{$info['city']}','{$info['stateID']}','{$info['zip']}','{$info['country']}','{$info['contact1FirstName']}','{$info['contact1LastName']}','{$info['contact2FirstName']}','{$info['contact2LastName']}','{$info['contact3FirstName']}','{$info['contact3LastName']}','{$info['phone']}','{$info['email']}','{$info['websiteURL']}')";
+		self::queryDb($query);
+		if(mysql_affected_rows())
+		{
+			$result['success'] = true;
+			$result['message'] = $info['companyName'] . ' was successfully added.';
+			$data = '';
+			if($contacts = GL::getOffices())
+			{
+				foreach($contacts as $c)
+				{
+					$data .= '<tr id="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+						$data .= '<td class="companyName">' . $c['companyName'] . '</td>';
+						$data .= '<td class="officeName">' . $c['officeLocale'] . '</td>';
+						$data .= '<td class="removeBtn"><button class="removeOfficeBtn">Remove</button></td>';
+					$data .= '</tr>';
+				}
+				GL::resetAlt();
+			}else
+			{
+				$data .= '<tr><td>No offices available</td></tr>';
+			}
+			$result['data'] = $data;
+			return $returnJSON ? json_encode($result) : true;
+		}
+		$result['success'] = false;
+		$result['message'] = 'There was an error adding ' . $info['companyName'] . '.';
+		return $returnJSON ? json_encode($result) : false;
 	}
 
 	#====================================================================================
@@ -299,10 +367,16 @@ class GL
 					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
 				$data .= '</tr>';
 			}
+			$data2 = '<option value="" selected="selected">Select an office category</option>';
+			foreach($categories as $c)
+			{
+				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
+			}
 			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = 'Category was successfully updated.';
 			$result['data']    = $data;
+			$ereult['data2']   = $data2;
 			return $returnJSON ? json_encode($result) : $result;
 		}
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
@@ -376,10 +450,16 @@ class GL
 					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
 				$data .= '</tr>';
 			}
+			$data2 = '<option value="" selected="selected">Select an office category</option>';
+			foreach($categories as $c)
+			{
+				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
+			}
 			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = 'Category successfully removed.';
 			$result['data']    = $data;
+			$result['data2']    = $data2;
 			return $returnJSON ? json_encode($result) : $result;
 		}
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'There was an error removing the category.')) : false;

@@ -1,5 +1,8 @@
 <h1>Contact</h1>
 
+<!-- ===================== -->
+<!-- = OFFICE CATEGORIES = -->
+<!-- ===================== -->
 <div id="officeCategoryShell">
 	<h3>Add/Edit Office Categories</h3>
 
@@ -24,12 +27,16 @@
 	<div id="addBtnShell"><label for="category"><input type="text" name="categoryName" id="categoryName" /></label><button id="addOfficeCategoryBtn">Add</button></div>
 </div>
 
+<!-- =============== -->
+<!-- = ADD OFFICES = -->
+<!-- =============== -->
 <div id="officeShell">
 	<h3>Add Office</h3>
 
 	<div id="addOfficeShell">
 		<div><label for="officeCategoryId">Office Category</label>
 			<select name="officeCategoryId" id="officeCategoryId">
+				<option value="" selected="selected">Select an office category</option>
 				<?php
 				if($categories = GL::getOfficeCategories())
 				{
@@ -51,6 +58,7 @@
 		<div><label for="city">City/Town</label><input type="text" name="city" id="city" /></div>
 		<div><label for="state">State/Province</label>
 			<select name="state" id="state">
+				<option value="51" selected="selected">Select a state</option>
 				<?php
 				if($states = GL::getStates())
 				{
@@ -75,6 +83,9 @@
 		<div id="addBtnShell"><button id="addOfficeBtn"></button></div>
 	</div>
 
+<!-- ================ -->
+<!-- = EDIT OFFICES = -->
+<!-- ================ -->
 	<h3>Edit Office</h3>
 	<div id="editOfficeShell">
 		<table id="officeTable" border="0" cellspacing="0" cellpadding="0">
