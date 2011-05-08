@@ -84,13 +84,13 @@ class GL
 					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
 				$data .= '</tr>';
 			}
+			self::resetAlt();
 			$data2 = '<option value="" selected="selected">Select an office category</option>';
 			foreach($categories as $c)
 			{
 				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
 			}
 			
-			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = $info['name'] . ' was successfully added.';
 			$result['data']    = $data;
@@ -367,16 +367,16 @@ class GL
 					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
 				$data .= '</tr>';
 			}
+			self::resetAlt();
 			$data2 = '<option value="" selected="selected">Select an office category</option>';
 			foreach($categories as $c)
 			{
 				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
 			}
-			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = 'Category was successfully updated.';
 			$result['data']    = $data;
-			$ereult['data2']   = $data2;
+			$result['data2']   = $data2;
 			return $returnJSON ? json_encode($result) : $result;
 		}
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
@@ -450,12 +450,12 @@ class GL
 					$data .= '<td class="updateBtn"><button class="updateOfficeCategoryBtn" name="' . $c['name'] . '" id="' . $c['id'] . '">Update</button></td>';
 				$data .= '</tr>';
 			}
+			self::resetAlt();
 			$data2 = '<option value="" selected="selected">Select an office category</option>';
 			foreach($categories as $c)
 			{
 				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
 			}
-			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = 'Category successfully removed.';
 			$result['data']    = $data;
