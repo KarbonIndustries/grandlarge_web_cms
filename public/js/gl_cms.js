@@ -213,7 +213,23 @@ contact.init                            = function()
 
 	c.objects          = {};
 	co                 = c.objects;
-	co.addOfficeFields = $(':text#officeName,:text#companyName,:text#address1,:text#address2,:text#address3,:text#city,:text#zip,:text#country,:text#contact1FirstName,:text#contact1LastName,:text#contact2FirstName,:text#contact2LastName,:text#contact3FirstName,:text#contact3LastName,','#addOfficeShell,:text#phone,:text#email,:text#websiteURL');
+	co.addOfficeFields = $(':text#officeName','#addOfficeShell')
+						 .add(':text#companyName','#addOfficeShell')
+						 .add(':text#address1','#addOfficeShell')
+						 .add(':text#address2','#addOfficeShell')
+						 .add(':text#address3','#addOfficeShell')
+						 .add(':text#city','#addOfficeShell')
+						 .add(':text#zip','#addOfficeShell')
+						 .add(':text#country','#addOfficeShell')
+						 .add(':text#contact1FirstName','#addOfficeShell')
+						 .add(':text#contact1LastName','#addOfficeShell')
+						 .add(':text#contact2FirstName','#addOfficeShell')
+						 .add(':text#contact2LastName','#addOfficeShell')
+						 .add(':text#contact3FirstName','#addOfficeShell')
+						 .add(':text#contact3LastName','#addOfficeShell')
+						 .add(':text#phone','#addOfficeShell')
+						 .add(':text#email','#addOfficeShell')
+						 .add(':text#websiteURL','#addOfficeShell');
 
 	c.addOfficeCategoryTableListeners().addOfficeTableListeners().addSubmitOfficeCategoryListener().addSubmitOfficeListener();
 
@@ -242,7 +258,7 @@ contact.addOfficeCategoryTableListeners = function()
 			if(data.success)
 			{
 				$('#officeCategoryTable').html(data.data);
-				$('#officeCategoryId','#addOfficeShell').html(data.data2);
+				$('#officeCategoryId','#addOfficeShell').add('#officeCategoryId','#editOffice').html(data.data2);
 				$('#officeTable','#editOfficeShell').html(data.data3);
 				c.addOfficeCategoryTableListeners().addOfficeTableListeners();
 			}else
@@ -270,7 +286,7 @@ contact.addOfficeCategoryTableListeners = function()
 			if(data.success)
 			{
 				$('#officeCategoryTable').html(data.data);
-				$('#officeCategoryId','#addOfficeShell').html(data.data2);
+				$('#officeCategoryId','#addOfficeShell').add('#officeCategoryId','#editOffice').html(data.data2);
 				c.addOfficeCategoryTableListeners();
 			}else
 			{
@@ -285,7 +301,54 @@ contact.addOfficeCategoryTableListeners = function()
 contact.addOfficeTableListeners         = function()
 {
 	var c = this;
-	
+
+// =================
+// = REMOVE OFFICE =
+// =================
+	$('.removeOfficeBtn','#editOfficeShell').click(function()
+	{
+		var companyName = $(this).parent().parent().find('td.companyName').text(),
+			params = {};
+		params.id  = $(this).attr('officeId');
+
+		if(!confirm('Are you sure you want to remove ' + companyName + '?'))
+		{
+			return;
+		}
+
+		$.get(AJAX_FILE,{callback:'removeOffice',params:params},function(data)
+		{
+			if(data.success)
+			{
+				$('#officeTable','#editOfficeShell').html(data.data);
+				c.addOfficeTableListeners();
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	});
+
+// =================
+// = SELECT OFFICE =
+// =================
+	$('#officeTable .companyName,#officeTable .officeName','#editOfficeShell').click(function()
+	{
+		var params = {};
+		params.id  = $(this).attr('officeId');
+
+		$.get(AJAX_FILE,{callback:'getOffice',params:params},function(data)
+		{
+			if(data.success)
+			{
+				// update fields
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	});
+
 	return c;
 };
 
@@ -312,7 +375,7 @@ contact.addSubmitOfficeCategoryListener = function()
 			if(data.success)
 			{
 				$('#officeCategoryTable','#officeCategoryShell').html(data.data);
-				$('#officeCategoryId','#addOfficeShell').html(data.data2);
+				$('#officeCategoryId','#addOfficeShell').add('#officeCategoryId','#editOffice').html(data.data2);
 				c.addOfficeCategoryTableListeners();
 				input.val('');
 			}else
@@ -364,7 +427,9 @@ contact.addSubmitOfficeListener         = function()
 			if(data.success)
 			{
 				$('#officeTable','#editOfficeShell').html(data.data);
-				c.resetAddOfficeFields();
+				$('#officeCategoryId','#addOfficeShell').val(0);
+				$('#state','#addOfficeShell').val(0);
+				c.resetAddOfficeFields().addOfficeTableListeners();
 			}else
 			{
 				alert(data.message);

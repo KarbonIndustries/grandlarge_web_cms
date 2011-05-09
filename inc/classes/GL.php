@@ -124,12 +124,12 @@ class GL
 		$info['address3']          = ucwords(strtolower($info['address3']));
 		$info['city']              = ucwords(strtolower($info['city']));
 		$info['country']           = ucwords($info['country']);
-		$info['contact1FirstName'] = ucwords(strtolower($info['contact1FirstName']));
-		$info['contact1LastName']  = ucwords(strtolower($info['contact1LastName']));
-		$info['contact2FirstName'] = ucwords(strtolower($info['contact2FirstName']));
-		$info['contact2LastName']  = ucwords(strtolower($info['contact2LastName']));
-		$info['contact3FirstName'] = ucwords(strtolower($info['contact3FirstName']));
-		$info['contact3LastName']  = ucwords(strtolower($info['contact3LastName']));
+		$info['contact1FirstName'] = ucfirst($info['contact1FirstName']);
+		$info['contact1LastName']  = ucfirst($info['contact1LastName']);
+		$info['contact2FirstName'] = ucfirst($info['contact2FirstName']);
+		$info['contact2LastName']  = ucfirst($info['contact2LastName']);
+		$info['contact3FirstName'] = ucfirst($info['contact3FirstName']);
+		$info['contact3LastName']  = ucfirst($info['contact3LastName']);
 		$info['email']             = strtolower($info['email']);
 		$info['websiteURL']        = strtolower($info['websiteURL']);
 
@@ -141,17 +141,17 @@ class GL
 			$result['success'] = true;
 			$result['message'] = $info['companyName'] . ' was successfully added.';
 			$data = '';
-			if($contacts = GL::getOffices())
+			if($contacts = self::getOffices())
 			{
 				foreach($contacts as $c)
 				{
 					$data .= '<tr id="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
-						$data .= '<td class="companyName">' . $c['companyName'] . '</td>';
-						$data .= '<td class="officeName">' . $c['officeLocale'] . '</td>';
-						$data .= '<td class="removeBtn"><button class="removeOfficeBtn">Remove</button></td>';
+						$data .= '<td  officeId="' . $c['id'] . '" class="companyName">' . $c['companyName'] . '</td>';
+						$data .= '<td  officeId="' . $c['id'] . '" class="officeName">' . $c['officeLocale'] . '</td>';
+						$data .= '<td  class="removeBtn"><button officeId="' . $c['id'] . '" class="removeOfficeBtn">Remove</button></td>';
 					$data .= '</tr>';
 				}
-				GL::resetAlt();
+				self::resetAlt();
 			}else
 			{
 				$data .= '<tr><td>No offices available</td></tr>';
@@ -479,7 +479,44 @@ class GL
 
 	public static function removeOffice($info,$returnJSON = true)
 	{
-		
+		if(!is_array($info))
+		{
+			$result['success'] = false;
+			$result['message'] = 'Invalid info';
+			return $returnJSON ? json_encode($result) : false;
+		}
+
+		$link = self::openConnection();
+
+		$query = "CALL removeOffice({$info['id']})";
+		self::queryDb($query);
+
+		if(mysql_affected_rows())
+		{
+			$result['success'] = true;
+			$result['message'] = 'Successfully removed office';
+			$data = '';
+			if($contacts = self::getOffices())
+			{
+				foreach($contacts as $c)
+				{
+					$data .= '<tr id="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+						$data .= '<td  officeId="' . $c['id'] . '" class="companyName">' . $c['companyName'] . '</td>';
+						$data .= '<td  officeId="' . $c['id'] . '" class="officeName">' . $c['officeLocale'] . '</td>';
+						$data .= '<td  class="removeBtn"><button officeId="' . $c['id'] . '" class="removeOfficeBtn">Remove</button></td>';
+					$data .= '</tr>';
+				}
+				self::resetAlt();
+			}else
+			{
+				$data .= '<tr><td>No offices available</td></tr>';
+			}
+			$result['data'] = $data;
+			return $returnJSON ? json_encode($result) : true;
+		}
+		$result['success'] = false;
+		$result['message'] = 'There was an error removing the office.';
+		return $returnJSON ? json_encode($result) : false;
 	}
 
 	#====================================================================================
