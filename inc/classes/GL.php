@@ -456,10 +456,22 @@ class GL
 			{
 				$data2 .= '<option value="' . $c['id'] . '">' . $c['name'] . '</option>';
 			}
+			$data3 = '';
+			$contacts = self::getOffices();
+			foreach($contacts as $c)
+			{
+				$data3 .= '<tr id="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+					$data3 .= '<td class="companyName">' . $c['companyName'] . '</td>';
+					$data3 .= '<td class="officeName">' . $c['officeLocale'] . '</td>';
+					$data3 .= '<td class="removeBtn"><button class="removeOfficeBtn">Remove</button></td>';
+				$data3 .= '</tr>';
+			}
+			self::resetAlt();
 			$result['success'] = true;
 			$result['message'] = 'Category successfully removed.';
 			$result['data']    = $data;
-			$result['data2']    = $data2;
+			$result['data2']   = $data2;
+			$result['data3']   = $data3;
 			return $returnJSON ? json_encode($result) : $result;
 		}
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'There was an error removing the category.')) : false;

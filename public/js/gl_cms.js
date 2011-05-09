@@ -1,15 +1,15 @@
 // CONFIG
-var SCRIPT_DIR = '/../scripts/';
-var AJAX_FILE = SCRIPT_DIR + 'ajax.php';
+var SCRIPT_DIR = '/../scripts/',
+	AJAX_FILE = SCRIPT_DIR + 'ajax.php';
 
 // OBJECTS
-var directors = {};
-var feeds     = {};
-var notable   = {};
-var about     = {};
-var contact   = {};
-var users     = {};
-var files     = {};
+var directors = {},
+	feeds     = {},
+	notable   = {},
+	about     = {},
+	contact   = {},
+	users     = {},
+	files     = {};
 
 // DIRECTORS
 directors.init                          = function()
@@ -25,7 +25,7 @@ directors.init                          = function()
 	d.editDirectorFields = $('#editDirectorShell #firstName,#editDirectorShell #lastName,#editDirectorShell #bio,#editDirectorShell #description,#editDirectorShell #website');
 	d.addTableListeners().addSubmitListeners();
 	return d;
-}
+};
 
 directors.addTableListeners             = function()
 {
@@ -62,9 +62,9 @@ directors.addTableListeners             = function()
 	// REMOVE DIRECTOR
 	$('.removeDirectorBtn').click(function()
 	{
-		var params       = {};
+		var directorName = $(this).parent().prev().text(),
+			params       = {};
 		params.id        = $(this).parent().parent().attr('directorId');
-		var directorName = $(this).parent().prev().text();
 		
 		// confirm delete
 		if(!confirm('Are you sure you want to remove ' + directorName + '?'))
@@ -87,7 +87,7 @@ directors.addTableListeners             = function()
 	});
 
 	return d;
-}
+};
 
 directors.addSubmitListeners            = function()
 {
@@ -168,7 +168,7 @@ directors.addSubmitListeners            = function()
 	});
 
 	return d;
-}
+};
 
 directors.resetDirector                 = function()
 {
@@ -183,42 +183,42 @@ directors.resetDirector                 = function()
 	d.currentDirector.website     = null;
 
 	return d;
-}
+};
 
 directors.clearAddDirectorFields        = function()
 {
 	var d = this;
 	d.addDirectorFields.val('');
 	return d;
-}
+};
 
 directors.clearEditDirectorFields       = function()
 {
 	var d = this;
 	d.editDirectorFields.val('');
 	return d;
-}
+};
 
 // CONTACT
 contact.init                            = function()
 {
-	var c    = this;
+	var c              = this;
 
-	c.errors          = {};
-	ce                = c.errors;
-	ce.removeCategory = 'There was an error deleting the category.';
-	ce.updateCategory = 'You must enter a category name.';
-	ce.addCategory    = 'You must enter a category name.';
-	ce.addContact1    = 'You must enter an office category, an office name and a company name.';
+	c.errors           = {};
+	ce                 = c.errors;
+	ce.removeCategory  = 'There was an error deleting the category.';
+	ce.updateCategory  = 'You must enter a category name.';
+	ce.addCategory     = 'You must enter a category name.';
+	ce.addContact1     = 'You must enter an office category, an office name and a company name.';
 
-	c.objects = {};
-	co        = c.objects;
+	c.objects          = {};
+	co                 = c.objects;
 	co.addOfficeFields = $(':text#officeName,:text#companyName,:text#address1,:text#address2,:text#address3,:text#city,:text#zip,:text#country,:text#contact1FirstName,:text#contact1LastName,:text#contact2FirstName,:text#contact2LastName,:text#contact3FirstName,:text#contact3LastName,','#addOfficeShell,:text#phone,:text#email,:text#websiteURL');
 
 	c.addOfficeCategoryTableListeners().addOfficeTableListeners().addSubmitOfficeCategoryListener().addSubmitOfficeListener();
 
 	return c;
-}
+};
 
 contact.addOfficeCategoryTableListeners = function()
 {
@@ -227,12 +227,12 @@ contact.addOfficeCategoryTableListeners = function()
 	// REMOVE CATEGORY
 	$("#officeCategoryTable :button.removeOfficeCategoryBtn").click(function()
 	{
-		var name = $(":input[name=name" + $(this).attr('id') + "]").val();
-		var params = {};
+		var name = $(":input[name=name" + $(this).attr('id') + "]").val(),
+			params = {};
 		params.id  = $(this).attr('id');
 
 		// confirm delete
-		if(!confirm('Are you sure you want to remove this category?'))
+		if(!confirm('WARNING:\nAll offices in this category will be removed!\n\nAre you sure you want to remove this category?'))
 		{
 			return;
 		}
@@ -243,7 +243,8 @@ contact.addOfficeCategoryTableListeners = function()
 			{
 				$('#officeCategoryTable').html(data.data);
 				$('#officeCategoryId','#addOfficeShell').html(data.data2);
-				c.addOfficeCategoryTableListeners();
+				$('#officeTable','#editOfficeShell').html(data.data3);
+				c.addOfficeCategoryTableListeners().addOfficeTableListeners();
 			}else
 			{
 				alert(data.message);
@@ -279,14 +280,14 @@ contact.addOfficeCategoryTableListeners = function()
 	});
 
 	return c;
-}
+};
 
 contact.addOfficeTableListeners         = function()
 {
 	var c = this;
 	
 	return c;
-}
+};
 
 contact.addSubmitOfficeCategoryListener = function()
 {
@@ -295,8 +296,8 @@ contact.addSubmitOfficeCategoryListener = function()
 	// ADD CATEGORY
 	$(":button#addOfficeCategoryBtn").click(function()
 	{
-		var input   = $("#addBtnShell :text#categoryName");
-		var params  = {};
+		var input   = $("#addBtnShell :text#categoryName"),
+			params  = {};
 		params.name = $.trim(input.val());
 
 		// confirm name contains value
@@ -322,7 +323,7 @@ contact.addSubmitOfficeCategoryListener = function()
 	});
 
 	return c;
-}
+};
 
 contact.addSubmitOfficeListener         = function()
 {
@@ -372,16 +373,16 @@ contact.addSubmitOfficeListener         = function()
 	});
 
 	return c;
-}
+};
 
-contact.resetAddOfficeFields = function()
+contact.resetAddOfficeFields            = function()
 {
-	var c = this;
-	var co = c.objects;
+	var c = this,
+		co = c.objects;
 	co.addOfficeFields.val('');
 
 	return c;
-}
+};
 
 
 
