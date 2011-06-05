@@ -102,7 +102,6 @@ class GL
 	
 	public static function addOffice($info,$returnJSON = true)
 	{
-		
 		if(!is_array($info))
 		{
 			$result['success'] = false;
@@ -133,8 +132,47 @@ class GL
 		$info['email']             = strtolower($info['email']);
 		$info['websiteURL']        = strtolower($info['websiteURL']);
 
-		$query  = "INSERT INTO `contacts` (`officeCategoryID`,`officeLocale`,`companyName`,`address1`,`address2`,`address3`,`city`,`stateID`,`zip`,`country`,`contact1FirstName`,`contact1LastName`,`contact2FirstName`,`contact2LastName`,`contact3FirstName`,`contact3LastName`,`phone`,`email`,`websiteURL`) ";
-		$query .= "VALUES ('{$info['officeCategoryID']}','{$info['officeLocale']}','{$info['companyName']}','{$info['address1']}','{$info['address2']}','{$info['address3']}','{$info['city']}','{$info['stateID']}','{$info['zip']}','{$info['country']}','{$info['contact1FirstName']}','{$info['contact1LastName']}','{$info['contact2FirstName']}','{$info['contact2LastName']}','{$info['contact3FirstName']}','{$info['contact3LastName']}','{$info['phone']}','{$info['email']}','{$info['websiteURL']}')";
+		$query  =<<<Q
+INSERT INTO `contacts` (`officeCategoryID`,
+			`officeLocale`,
+			`companyName`,
+			`address1`,
+			`address2`,
+			`address3`,
+			`city`,
+			`stateID`,
+			`zip`,
+			`country`,
+			`contact1FirstName`,
+			`contact1LastName`,
+			`contact2FirstName`,
+			`contact2LastName`,
+			`contact3FirstName`,
+			`contact3LastName`,
+			`phone`,
+			`email`,
+			`websiteURL`)
+VALUES ('{$info['officeCategoryID']}',
+		'{$info['officeLocale']}',
+		'{$info['companyName']}',
+		'{$info['address1']}',
+		'{$info['address2']}',
+		'{$info['address3']}',
+		'{$info['city']}',
+		'{$info['stateID']}',
+		'{$info['zip']}',
+		'{$info['country']}',
+		'{$info['contact1FirstName']}',
+		'{$info['contact1LastName']}',
+		'{$info['contact2FirstName']}',
+		'{$info['contact2LastName']}',
+		'{$info['contact3FirstName']}',
+		'{$info['contact3LastName']}',
+		'{$info['phone']}',
+		'{$info['email']}',
+		'{$info['websiteURL']}')
+Q;
+
 		self::queryDb($query);
 		if(mysql_affected_rows())
 		{
@@ -384,7 +422,88 @@ class GL
 
 	public static function updateOffice($info,$returnJSON = true)
 	{
-		
+		if(!is_array($info))
+		{
+			$result['success'] = false;
+			$result['message'] = 'Invalid info';
+			return $returnJSON ? json_encode($result) : false;
+		}
+
+		$link = self::openConnection();
+
+		foreach($info as $key => $val)
+		{
+			$info[$key] = self::mysqlClean($val);
+		}
+
+		$info['officeLocale']      = ucwords(strtolower($info['officeLocale']));
+		$info['companyName']       = ucwords(strtolower($info['companyName']));
+		$info['address1']          = ucwords(strtolower($info['address1']));
+		$info['address2']          = ucwords(strtolower($info['address2']));
+		$info['address3']          = ucwords(strtolower($info['address3']));
+		$info['city']              = ucwords(strtolower($info['city']));
+		$info['country']           = ucwords($info['country']);
+		$info['contact1FirstName'] = ucfirst($info['contact1FirstName']);
+		$info['contact1LastName']  = ucfirst($info['contact1LastName']);
+		$info['contact2FirstName'] = ucfirst($info['contact2FirstName']);
+		$info['contact2LastName']  = ucfirst($info['contact2LastName']);
+		$info['contact3FirstName'] = ucfirst($info['contact3FirstName']);
+		$info['contact3LastName']  = ucfirst($info['contact3LastName']);
+		$info['email']             = strtolower($info['email']);
+		$info['websiteURL']        = strtolower($info['websiteURL']);
+
+		$query  =<<<Q
+UPDATE `contacts`
+SET `officeCategoryID`    = '{$info['officeCategoryID']}',
+	`officeLocale`        = '{$info['officeLocale']}',
+	`companyName`         = '{$info['companyName']}',
+	`address1`            = '{$info['address1']}',
+	`address2`            = '{$info['address2']}',
+	`address3`            = '{$info['address3']}',
+	`city`                = '{$info['city']}',
+	`stateID`             = '{$info['stateID']}',
+	`zip`                 = '{$info['zip']}',
+	`country`             = '{$info['country']}',
+	`contact1FirstName`   = '{$info['contact1FirstName']}',
+	`contact1LastName`    = '{$info['contact1LastName']}',
+	`contact2FirstName`   = '{$info['contact2FirstName']}',
+	`contact2LastName`    = '{$info['contact2LastName']}',
+	`contact3FirstName`   = '{$info['contact3FirstName']}',
+	`contact3LastName`    = '{$info['contact3LastName']}',
+	`phone`               = '{$info['phone']}',
+	`email`               = '{$info['email']}',
+	`websiteURL`          = '{$info['websiteURL']}'
+WHERE `contacts`.`id`     = {$info['id']}
+LIMIT 1
+Q;
+
+		self::queryDb($query);
+		if(mysql_affected_rows() === 1 || mysql_affected_rows() === 0)
+		{
+			$result['success'] = true;
+			$result['message'] = $info['companyName'] . ' was successfully updated.';
+			$data = '';
+			if($contacts = self::getOffices())
+			{
+				foreach($contacts as $c)
+				{
+					$data .= '<tr id="' . $c['id'] . '" class="' . self::altStr('altRow') . '">';
+						$data .= '<td  officeId="' . $c['id'] . '" class="companyName">' . $c['companyName'] . '</td>';
+						$data .= '<td  officeId="' . $c['id'] . '" class="officeName">' . $c['officeLocale'] . '</td>';
+						$data .= '<td  class="removeBtn"><button officeId="' . $c['id'] . '" class="removeOfficeBtn">Remove</button></td>';
+					$data .= '</tr>';
+				}
+				self::resetAlt();
+			}else
+			{
+				$data .= '<tr><td>There are no offices available.</td></tr>';
+			}
+			$result['data'] = $data;
+			return $returnJSON ? json_encode($result) : true;
+		}
+		$result['success'] = false;
+		$result['message'] = 'Unable to update ' . $info['companyName'] . '.';
+		return $returnJSON ? json_encode($result) : false;
 	}
 
 	#====================================================================================
@@ -488,7 +607,11 @@ class GL
 
 		$link = self::openConnection();
 
-		$query = "CALL removeOffice({$info['id']})";
+		$query =<<<Q
+DELETE FROM `contacts`
+WHERE `contacts`.`id` = {$info['id']}
+LIMIT 1;
+Q;
 		self::queryDb($query);
 
 		if(mysql_affected_rows())

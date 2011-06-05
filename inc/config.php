@@ -35,4 +35,8 @@ define('LOGIN_PAGE','login.php');
 define('PHONE_ABBR','T:');
 define('WEB_ABBR','W:');
 define('EMAIL_ABBR','E:');
+
+#MISC
+define('NL',"\n");
+define('EOL',PHP_EOL);
 ?>

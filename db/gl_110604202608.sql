@@ -4,7 +4,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.37)
 # Database: grandlargeinc_com_teset_site_aplus_net
-# Generation Time: 2011-04-18 01:28:49 -0400
+# Generation Time: 2011-06-04 20:26:10 -0400
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -54,8 +54,8 @@ CREATE TABLE `contacts` (
   `address3` varchar(40) NOT NULL DEFAULT '',
   `city` varchar(40) NOT NULL DEFAULT '',
   `stateID` tinyint(2) unsigned NOT NULL DEFAULT '51',
-  `country` varchar(40) NOT NULL DEFAULT '',
   `zip` varchar(10) NOT NULL DEFAULT '',
+  `country` varchar(40) NOT NULL DEFAULT '',
   `contact1FirstName` varchar(40) NOT NULL DEFAULT '',
   `contact1LastName` varchar(40) NOT NULL DEFAULT '',
   `contact2FirstName` varchar(40) NOT NULL DEFAULT '',
@@ -73,17 +73,18 @@ CREATE TABLE `contacts` (
   KEY `officeCategoryID` (`officeCategoryID`),
   CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`stateID`) REFERENCES `states` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `contacts_ibfk_3` FOREIGN KEY (`officeCategoryID`) REFERENCES `officecategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-INSERT INTO `contacts` (`id`,`officeCategoryID`,`officeLocale`,`companyName`,`address1`,`address2`,`address3`,`city`,`stateID`,`country`,`zip`,`contact1FirstName`,`contact1LastName`,`contact2FirstName`,`contact2LastName`,`contact3FirstName`,`contact3LastName`,`phone`,`email`,`websiteURL`)
+INSERT INTO `contacts` (`id`,`officeCategoryID`,`officeLocale`,`companyName`,`address1`,`address2`,`address3`,`city`,`stateID`,`zip`,`country`,`contact1FirstName`,`contact1LastName`,`contact2FirstName`,`contact2LastName`,`contact3FirstName`,`contact3LastName`,`phone`,`email`,`websiteURL`)
 VALUES
-	(1,1,'New York','Grand Large Inc.','54 Mercer Street','','','New York',32,'USA','10013','Steven','Horton','','','','','2129888390','steven@grandlargeinc.com','www.grandlargeinc.com'),
-	(2,1,'Paris','Grand Large Inc.','22 Rue de Navarin','','','Paris',51,'France','75009','Steven','Horton','','','','','33143060330','info@grandlargeinc.com','www.grandlargeinc.com'),
-	(3,2,'East Coast','FM Artist Management','30 Irving Place','6th Floor','','New York',32,'USA','10013','Carl','Forsberg','Marianne','McCarley','','','2125812200','carl@fmartist.com','www.forsbergmccarley.com'),
-	(4,2,'Midwest','Hilly Reps','680 North Lake Shore Drive','Suite 320','','Chicago',13,'USA','60611','Hillary','Herbst','Laurel','Dobose','','','3129441100','hillary@hillyreps.com','www.hillyreps.com'),
-	(5,2,'West Coast','Two Tricky Pony, Inc.','21816 Grovepark Drive','','','Santa Clarita',5,'USA','91350','Jonathan','Miller','','','','','2123008962','jmiller@2trickypony.com','www.2trickpony.com');
+	(1,1,'New York','Grand Large Inc.','54 Mercer Street','','','New York',32,'10013','USA','Steven','Horton','','','','','2129888390','steven@grandlargeinc.com','www.grandlargeinc.com'),
+	(2,1,'Paris','Grand Large Inc.','22 Rue de Navarin','','','Paris',51,'75009','France','Steven','Horton','','','','','33143060330','info@grandlargeinc.com','www.grandlargeinc.com'),
+	(3,2,'East Coast','FM Artist Management','30 Irving Place','6th Floor','','New York',32,'10013','USA','Carl','Forsberg','Marianne','McCarley','','','2125812200','carl@fmartist.com','www.forsbergmccarley.com'),
+	(4,2,'Midwest','Hilly Reps','680 North Lake Shore Drive','Suite 320','','Chicago',13,'60611','USA','Hillary','Herbst','Laurel','Dobose','','','3129441100','hillary@hillyreps.com','www.hillyreps.com'),
+	(5,2,'West Coast','Two Tricky Pony, Inc.','21816 Grovepark Drive','','','Santa Clarita',5,'91350','USA','Jonathan','Miller','','','','','2123008962','millerjonathan@mac.com','www.2trickpony.com'),
+	(17,2,'Germany','Dare Devil Software','','','','',51,'','','','','','','','','','','');
 
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -106,7 +107,7 @@ CREATE TABLE `directors` (
   KEY `active` (`active`),
   KEY `firstName` (`firstName`),
   KEY `lastName` (`lastName`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `directors` WRITE;
 /*!40000 ALTER TABLE `directors` DISABLE KEYS */;
@@ -303,8 +304,9 @@ DROP TABLE IF EXISTS `officeCategories`;
 CREATE TABLE `officeCategories` (
   `id` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(40) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `officeCategories` WRITE;
 /*!40000 ALTER TABLE `officeCategories` DISABLE KEYS */;
