@@ -208,11 +208,12 @@ Q;
 	public static function getDirectors()
 	{
 		$link = self::openConnection();
-		$query = "";
-		$query .= "SELECT `directors`.`id`,`directors`.`firstName`,`directors`.`lastName` ";
-		$query .= "FROM `directors` ";
-		$query .= "WHERE `directors`.`active` = 1 ";
-		$query .= "ORDER BY `directors`.`firstName` ASC";
+		$query =<<<Q
+SELECT `directors`.`id`,`directors`.`firstName`,`directors`.`lastName`
+FROM `directors`
+WHERE `directors`.`active` = 1
+ORDER BY `directors`.`firstName` ASC
+Q;
 		$result = self::queryDb($query);
 		while($row = mysql_fetch_assoc($result))
 		{
@@ -306,8 +307,10 @@ Q;
 	public static function getStates()
 	{
 		$link    = self::openConnection();
-		$query   = "SELECT * FROM `states` ";
-		$query  .= "ORDER BY `states`.`abbreviation` ASC";
+		$query   =<<<Q
+SELECT * FROM `states`
+ORDER BY `states`.`abbreviation` ASC
+Q;
 		$result  = self::queryDb($query);
 		if(mysql_num_rows($result))
 		{
@@ -317,6 +320,49 @@ Q;
 				$states[] = $row;
 			}
 			return $states;
+		}
+		return false;
+	}
+
+	public static function getFeeds()
+	{
+		$link = self::openConnection();
+		$query =<<<Q
+SELECT `mediaFeeds`.*,TRIM(CONCAT(`directors`.`firstName`,' ',`directors`.`lastName`)) AS `directorName`,`navigation`.`name` AS `categoryName`
+FROM `mediaFeeds`,`directors`,`mediaCategories`,`navigation`
+WHERE `mediaFeeds`.`directorID` = `directors`.`id`
+AND `mediaFeeds`.`mediaCategoryID` = `mediaCategories`.`id`
+AND `mediaCategories`.`id` = `navigation`.`id`
+ORDER BY `mediaFeeds`.`mediaCategoryID` ASC,`mediaFeeds`.`categoryPosition` ASC
+Q;
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			while($row = mysql_fetch_assoc($result))
+			{
+				$feeds[] = $row;
+			}
+			return $feeds;
+		}
+		return false;
+	}
+
+	public static function getMediaCategories()
+	{
+		$link = self::openConnection();
+		$query =<<<Q
+SELECT `navigation`.*
+FROM `navigation`,`mediaCategories`
+WHERE `navigation`.`id` = `mediaCategories`.`navId`
+Q;
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			while($row = mysql_fetch_assoc($result))
+			{
+				$cats[] = $row;
+			}
+			return $cats;
 		}
 		return false;
 	}
@@ -437,7 +483,8 @@ Q;
 		}
 
 		$info['officeLocale']      = ucwords(strtolower($info['officeLocale']));
-		$info['companyName']       = ucwords(strtolower($info['companyName']));
+#		$info['companyName']       = ucwords(strtolower($info['companyName']));
+		$info['companyName']       = ucwords($info['companyName']);
 		$info['address1']          = ucwords(strtolower($info['address1']));
 		$info['address2']          = ucwords(strtolower($info['address2']));
 		$info['address3']          = ucwords(strtolower($info['address3']));

@@ -39,31 +39,31 @@ class Page
 		switch($navSelect)
 		{
 			case 1:
-			$selected[1] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 2:
-			$selected[2] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 3:
-			$selected[3] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 4:
-			$selected[4] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 5:
-			$selected[5] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 6:
-			$selected[6] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 7:
-			$selected[7] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 8:
-			$selected[8] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			case 9:
-			$selected[9] = 'selected';
+			$selected[$navSelect] = 'selected';
 			break;
 			default:
 			break;

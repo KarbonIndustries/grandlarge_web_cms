@@ -11,6 +11,18 @@ var directors = {},
 	users     = {},
 	files     = {};
 
+
+	// FEEDS
+feeds.init                              = function()
+{
+	var f = this,
+	fe = f.errors;
+	//f.errors = {};
+	
+
+	return f;
+};
+
 // DIRECTORS
 directors.init                          = function()
 {
@@ -549,8 +561,6 @@ contact.resetEditOfficeFields           = function()
 
 	return c;
 };
-
-
 
 
 

@@ -32,5 +32,4 @@ require_once(ELEMENT_DIR . $selPage . '.php');
 <?php
 require_once(ELEMENT_DIR . 'html_foot.php');
 GL::closeDb();
-GL::closeDb();
 ?>

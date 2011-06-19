@@ -1,12 +1,32 @@
 <h1>Feeds</h1>
 
 <h3>Add Feed</h3>
+<?php
+if($directors = GL::getDirectors())
+{
+	<select name="directors" id="directors">
+		<option value="1">director 1</option>
+		<option value="2">director 2</option>
+		<option value="3">director 3</option>
+	</select>
+	
+}
 
-<select name="directors" id="directors">
-	<option value="1">director 1</option>
-	<option value="2">director 2</option>
-	<option value="3">director 3</option>
-</select>
+if($feeds = GL::getFeeds())
+{
+	$catId = null;
+	foreach($feeds as $f)
+	{
+		if($f['mediaCategoryID'] !== $catId)
+		{
+			echo '<br />' . $f['categoryName'] . '<br />';
+			$catId = $f['mediaCategoryID'];
+		}
+		echo $f['categoryPosition'] . ' => ' . $f['directorName'] . '<br />';
+	}
+}
+
+?>
 <select name="mediaCategory" id="mediaCategory">
 	<option value="2">Commercials</option>
 	<option value="3">Beauty</option>
