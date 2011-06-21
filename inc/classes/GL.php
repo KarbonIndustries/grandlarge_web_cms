@@ -215,11 +215,15 @@ WHERE `directors`.`active` = 1
 ORDER BY `directors`.`firstName` ASC
 Q;
 		$result = self::queryDb($query);
-		while($row = mysql_fetch_assoc($result))
+		if(mysql_num_rows($result))
 		{
-			$directors[] = $row;
+			while($row = mysql_fetch_assoc($result))
+			{
+				$directors[] = $row;
+			}
+			return $directors;
 		}
-		return $directors;
+		return false;
 	}
 
 	public static function getDirector($info,$returnJSON = true)
@@ -354,6 +358,7 @@ Q;
 SELECT `navigation`.*
 FROM `navigation`,`mediaCategories`
 WHERE `navigation`.`id` = `mediaCategories`.`navId`
+ORDER BY `navigation`.`id` ASC
 Q;
 		$result = self::queryDb($query);
 		if(mysql_num_rows($result))

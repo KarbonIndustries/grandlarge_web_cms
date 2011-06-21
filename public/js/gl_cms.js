@@ -15,8 +15,8 @@ var directors = {},
 	// FEEDS
 feeds.init                              = function()
 {
-	var f = this,
-	fe = f.errors;
+	var f = this;
+	f.errors = {};
 	//f.errors = {};
 	
 

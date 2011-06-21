@@ -62,5 +62,17 @@ ul{list-style-type:none;padding:0;}
 		#editOffice #updateOfficeBtnShell{text-align:right;margin-top:10px;}
 		#editOffice #updateOfficeBtn{background:url('/img/sprites.png') no-repeat scroll 0 -56px transparent;border:none;width:100px;height:38px;}
 
+	/* FEEDS */
+	#addFeedShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
+	#addFeedShell>div{margin:10px 0;}
+		#addFeedShell input#feedUrl{width:336px;}
+		#addFeedShell #addBtnShell{text-align:right;width:600px;margin-top:10px;}
+		#addFeedShell #addFeedBtn{background:url('/img/sprites.png') no-repeat scroll 0 0 transparent;border:none;width:84px;height:38px;}
+	#editFeedShell{}
+		#editFeedShell table#feedList{}
+		#editFeedShell table#feedList th{text-align:left;padding-top:12px;color:#65A7C0;font-size:15px;}
+		#editFeedShell table#feedList td.nameCol{width:500px;}
+		#editFeedShell table#feedList input{width:16px;}
+
 .hidden{display:none;}
 tr.altRow{background:#141414;}

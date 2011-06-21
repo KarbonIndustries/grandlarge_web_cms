@@ -1,48 +1,63 @@
 <h1>Feeds</h1>
 
+<div id="addFeedShell">
 <h3>Add Feed</h3>
-<?php
-if($directors = GL::getDirectors())
-{
-	<select name="directors" id="directors">
-		<option value="1">director 1</option>
-		<option value="2">director 2</option>
-		<option value="3">director 3</option>
-	</select>
-	
-}
 
+<?php
+if(($directors = GL::getDirectors()) && ($mediaCategories = GL::getMediaCategories()))
+{?>
+	<select name="directors" id="directors">
+	<?foreach($directors as $d)
+	{?>
+		<option value="<?= $d['id'] ?>"><?= $d['firstName'] . ' ' . $d['lastName']?></option>
+	<?}?>
+	</select>
+
+	<select name="mediaCategories" id="mediaCategories">
+	<?foreach($mediaCategories as $mc)
+	{?>
+		<option value="<?= $mc['id'] ?>"><?= $mc['name'] ?></option>
+	<?}?>
+	</select>
+
+	<input type="text" name="feedUrl" id="feedUrl" value="Feed URL"/>
+
+	<div id="addBtnShell"><button id="addFeedBtn"></button></div>
+<?}?>
+</div>
+
+<div id="editFeedShell">
+<h3>Edit Feed</h3>
+
+<?php
 if($feeds = GL::getFeeds())
-{
-	$catId = null;
+{?>
+	<table id="feedList" border="0" cellspacing="0" cellpadding="2">
+	<?$catId = null;
 	foreach($feeds as $f)
 	{
 		if($f['mediaCategoryID'] !== $catId)
-		{
-			echo '<br />' . $f['categoryName'] . '<br />';
-			$catId = $f['mediaCategoryID'];
-		}
-		echo $f['categoryPosition'] . ' => ' . $f['directorName'] . '<br />';
-	}
-}
-
-?>
-<select name="mediaCategory" id="mediaCategory">
-	<option value="2">Commercials</option>
-	<option value="3">Beauty</option>
-	<option value="4">International</option>
-	<option value="5">Feature Film</option>
-</select>
-<input type="text" name="feedUrl" id="feedUrl" />
-<br />
-get feeds by media category/category position<br /><br />
-media category 1<br />
-1. -- director -- media category -- feed url -- remove<br />
-2. -- director -- media category -- feed url -- remove<br />
-3. -- director -- media category -- feed url -- remove<br /><br />
-
-media category 2<br />
-1. -- director -- media category -- feed url -- remove<br />
-2. -- director -- media category -- feed url -- remove<br />
-3. -- director -- media category -- feed url -- remove<br />
-4. -- director -- media category -- feed url -- remove<br />
+		{?>
+			<thead>
+				<tr>
+					<th colspan="4"><?= $f['categoryName'] ?></th>
+				</tr>
+			</thead>
+			<?$catId = $f['mediaCategoryID'];
+			GL::resetAlt();
+		}?>
+			<tbody>
+				<tr <?= GL::altStr('class="altRow"') ?> rowId="<?= $f['id'] ?>">
+					<td class="positionCol"><input class="feedCategoryPosition" type="text" value="<?= $f['categoryPosition'] ?>"/></td>
+					<td class="nameCol"><?= $f['directorName'] ?></td>
+					<td class="updateCol"><button class="updateFeedBtn" name="" id="" feedId="<?= $f['id'] ?>">Update</button></td>
+					<td class="removeCol"><button class="removeFeedBtn" name="" id="" feedId="<?= $f['id'] ?>">Remove</button></td>
+				</tr>
+			</tbody>
+	<?}?>
+	</table>
+<?}?>
+</div>
+<script type="text/javascript" charset="utf-8">
+	feeds.init();
+</script>
