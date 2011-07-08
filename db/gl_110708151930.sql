@@ -4,7 +4,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.37)
 # Database: grandlargeinc_com_teset_site_aplus_net
-# Generation Time: 2011-06-21 01:16:09 -0400
+# Generation Time: 2011-07-08 15:19:34 -0400
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -83,7 +83,7 @@ VALUES
 	(2,1,'Paris','Grand Large Inc.','22 Rue de Navarin','','','Paris',51,'75009','France','Steven','Horton','','','','','33143060330','info@grandlargeinc.com','www.grandlargeinc.com'),
 	(3,2,'East Coast','Fm Artist Management','30 Irving Place','6th Floor','','New York',32,'10013','USA','Carl','Forsberg','Marianne','McCarley','','','2125812200','carl@fmartist.com','www.forsbergmccarley.com'),
 	(4,2,'Midwest','Hilly Reps','680 North Lake Shore Drive','Suite 320','','Chicago',13,'60611','USA','Hillary','Herbst','Laurel','Dobose','','','3129441100','hillary@hillyreps.com','www.hillyreps.com'),
-	(5,2,'West Coast','Two Tricky Pony, Inc.','21816 Grovepark Drive','','','Santa Clarita',5,'91350','USA','Jonathan','Miller','','','','','2123008962','millerjonathan@mac.com','www.2trickpony.com'),
+	(5,1,'West Coast','Two Tricky Pony, Inc.','21816 Grovepark Drive','','','Santa Clarita',5,'91350','USA','Jonathan','Miller<br />Executive Producer','','','','','2123008962','jonathan@grandlargeinc.com','www.grandlargeinc.com'),
 	(17,2,'Germany','DareDevil Software Corp','','','','',51,'','','Shammel','Lee','','','','','2125558789','us@daredevilsoftware.com','daredevilsoft.com'),
 	(20,2,'Sadfdf','Asdfadf','','','','',51,'','','','','','','','','','','');
 
@@ -108,7 +108,7 @@ CREATE TABLE `directors` (
   KEY `active` (`active`),
   KEY `firstName` (`firstName`),
   KEY `lastName` (`lastName`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `directors` WRITE;
 /*!40000 ALTER TABLE `directors` DISABLE KEYS */;
@@ -117,7 +117,6 @@ VALUES
 	(1,1,'Tracey','Rowe','Tracey\'s work is known for compelling rich images and stylish details. She thrives on bringing the emotional content out of each visual while at the same time enhancing the concept of the film.','http://www.traceyrowe.com',''),
 	(2,1,'Gaysorn','Thavat','Gaysorn\'s work has a distinctive and smart humor infused with a stylish and fresh approach.  From drama to comedy, she is recognized for her strong visuals, inspiring performances and passion for storytelling.\n\nHer commercial titled \"Dying Old\" for the Breast Cancer Research Trust in New Zealand was awarded a Gold Lion at the Cannes International Advertising Festival 2009.','',''),
 	(3,1,'Jean-Pierre','Jeunet','Jean-Pierre Jeunet is the writer/director behind the wonderfully imaginative films <em>Am&eacute;lie, The City Of Lost Children, and Delicatessen</em>. He began his career in France shooting television commercials, music videos and short films.','http://www.jpjeunet-siteofficiel.com',''),
-	(4,1,'Francesco','Carrozzini','New York based Italian, Francesco Carrozzini is an internationally recognized photographer and noted filmmaker.  He has amassed an extensive print portfolio, as well as commercials for Est&eacute;e Lauder, Tommy Hilfiger, Ray-Ban and The New York Times.','http://www.francescocarrozzini.com',''),
 	(5,1,'Fred','Garson','Fred Garson is a commercial and feature film director who has a very strong eye for what is modern and fresh.  He is also heavily involved in the music industry and brings an enormous energy and style to all his films.','',''),
 	(6,1,'Tom','Kan','Tom Kan is a French born and raised Japanese national based in Paris. He has directed commercials as well as music videos for iconic French artists Daft Punk, Ophelie Winter and AIR. Tom is also known for his design work, having done logos, album covers and movie titles.','http://www.tomkandesign.com',''),
 	(7,1,'Bettina','Rheims','Bettina is renowned for her erotic black and white portraits of women as well as for working with famous actresses such as Catherine Deneuve, Charlotte Rampling, Lauren Bacall, Glenn Close, Daryl Hannah and Sharon Stone. Her film style is intrinsically modern, sensual, intricate and relevant.','',''),
@@ -127,10 +126,10 @@ VALUES
 	(11,1,'Marc','Caro','Marc Caro, is a French filmmaker and illustrator, best known for his co-directing projects, <em>Delicatessen</em> and <em>City of Lost Children</em>.  He is noted for his creative character design, which is present in his latest sci-fi inspired feature film <em>Dante 01</em>.','',''),
 	(12,1,'Tran anh','Hung','French-Vietnamese director, Tran Anh Hung has a strong eye for color, texture and beauty.  His Oscar-nominated debut (for Best foreign film) was with <em>The Scent of Green Papaya</em>, which also won two top prizes at the prestigious 1993 Cannes Film Festival.','',''),
 	(13,1,'Showreel','','','','grand large showreel'),
-	(15,1,'Yoann','Lemoine','','',''),
 	(16,1,'Ronald','Wohlman','','',''),
 	(17,1,'Shizue','','','',''),
-	(18,1,'Leif-Husted','Jensen','','','');
+	(18,1,'Leif-Husted','Jensen','','',''),
+	(19,1,'Andy','Tennant','Andy Tennant is an American screenwriter and director that made his way into film through acting and television directing. \n\nHe is credited for his work on the worldwide blockbuster Hitch, starring Will Smith, along with the popular romantic comedies Sweet Home Alabama, starring Reese Witherspoon, The Bounty Hunter and Fool\'s Gold.\n\nHe also directed Ever After, a film inspired by the fairy tale Cinderella, starring Drew Barrymore and Angelica Huston and the classic Anna and the King, with Jodie Foster and Chow Yun-Fat, which received two Academy Award nominations.','','');
 
 /*!40000 ALTER TABLE `directors` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -189,7 +188,7 @@ DROP TABLE IF EXISTS `mediaFeeds`;
 CREATE TABLE `mediaFeeds` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `mediaCategoryID` int(11) unsigned NOT NULL,
-  `categoryPosition` tinyint(2) unsigned NOT NULL,
+  `categoryPosition` tinyint(2) unsigned NOT NULL DEFAULT '1',
   `directorID` int(11) unsigned NOT NULL DEFAULT '0',
   `feedURL` varchar(2083) NOT NULL,
   `timeAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -199,7 +198,7 @@ CREATE TABLE `mediaFeeds` (
   KEY `directorID` (`directorID`),
   CONSTRAINT `mediafeeds_ibfk_1` FOREIGN KEY (`directorID`) REFERENCES `directors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mediafeeds_ibfk_2` FOREIGN KEY (`mediaCategoryID`) REFERENCES `mediacategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `mediaFeeds` WRITE;
 /*!40000 ALTER TABLE `mediaFeeds` DISABLE KEYS */;
@@ -209,7 +208,6 @@ VALUES
 	(2,2,1,1,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/760dd15520de190a03949d5cd60cd065/','2011-01-03 23:51:09','0000-00-00 00:00:00'),
 	(3,2,2,2,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/af079faf9d205592723c7fa09cb6a101/','2011-01-03 23:51:52','0000-00-00 00:00:00'),
 	(4,2,3,3,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/e563367bd2ccfb3d63108e728730e69b/','2011-01-03 23:52:13','0000-00-00 00:00:00'),
-	(5,2,4,4,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/5c2bd5e8fe904f277219fc54b3f5365b/','2011-01-03 23:52:37','0000-00-00 00:00:00'),
 	(6,2,5,5,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/2023b53d7fe5cbb0f5cab5827a6f105e/','2011-01-03 23:52:46','0000-00-00 00:00:00'),
 	(7,2,6,6,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/f0c36fd382d5895cff4c05359929a66e/','2011-01-03 23:52:58','0000-00-00 00:00:00'),
 	(8,3,1,7,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/f51b9282a8cb64eec0b519b3ea47080d/','2011-01-03 23:53:36','0000-00-00 00:00:00'),
@@ -219,10 +217,10 @@ VALUES
 	(12,5,1,3,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/e563367bd2ccfb3d63108e728730e69b/','2011-01-03 23:55:25','0000-00-00 00:00:00'),
 	(13,5,2,11,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/2838ddc0a0a766181709e98d178b0267/','2011-01-03 23:55:30','0000-00-00 00:00:00'),
 	(14,5,3,12,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/e99ac277129794a1147304223b99d247/','2011-01-03 23:55:37','0000-00-00 00:00:00'),
-	(15,6,1,15,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/24bb3af337e74439e9a085014a745b77/','2011-01-10 22:08:55','0000-00-00 00:00:00'),
 	(20,6,3,16,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/319800429084791d370a9733e4861d9a/','2011-02-05 15:51:16','0000-00-00 00:00:00'),
 	(21,3,3,17,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/764f64738132ac5166b772ffe733d4b9/','2011-02-05 15:55:15','0000-00-00 00:00:00'),
-	(22,6,2,18,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/a9e971d1fd2f5d6ee38575437e8024a4/','2011-03-06 16:56:28','0000-00-00 00:00:00');
+	(22,6,2,18,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/a9e971d1fd2f5d6ee38575437e8024a4/','2011-03-06 16:56:28','0000-00-00 00:00:00'),
+	(24,2,4,19,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/b1a2d0ec17d09b41d89aaae557e20ae8/','2011-07-03 18:11:16','0000-00-00 00:00:00');
 
 /*!40000 ALTER TABLE `mediaFeeds` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -307,7 +305,7 @@ CREATE TABLE `officeCategories` (
   `name` varchar(40) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `officeCategories` WRITE;
 /*!40000 ALTER TABLE `officeCategories` DISABLE KEYS */;

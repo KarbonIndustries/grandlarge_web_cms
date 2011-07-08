@@ -328,7 +328,7 @@ Q;
 		return false;
 	}
 
-	public static function getFeeds()
+	public static function getFeeds($returnJSON = true)
 	{
 		$link = self::openConnection();
 		$query =<<<Q
@@ -346,9 +346,45 @@ Q;
 			{
 				$feeds[] = $row;
 			}
+
+			if($returnJSON)
+			{
+				$data['success'] = true;
+				$data['data'] = '';
+				$catId = null;
+				foreach($feeds as $f)
+				{
+					if($f['mediaCategoryID'] !== $catId)
+					{
+						$data['data'] .= <<<HTML_DATA
+<thead>
+	<tr>
+		<th colspan="4">{$f['categoryName']}</th>
+	</tr>
+</thead>
+HTML_DATA;
+						$catId = $f['mediaCategoryID'];
+						self::resetAlt();
+					}
+					$altStr = self::altStr('class="altRow"');
+					$data['data'] .= <<<HTML_DATA
+<tbody>
+	<tr {$altStr} rowId="{$f['id']}">
+		<td class="positionCol"><input class="feedCategoryPosition" type="text" value="{$f['categoryPosition']}"/></td>
+		<td class="nameCol">{$f['directorName']}</td>
+		<td class="updateCol"><button class="updateFeedBtn" name="" id="" feedId="{$f['id']}">Update</button></td>
+		<td class="removeCol"><button class="removeFeedBtn" name="" id="" feedId="{$f['id']}">Remove</button></td>
+	</tr>
+</tbody>
+HTML_DATA;
+				}
+				self::resetAlt();
+				return json_encode($data);
+			}
 			return $feeds;
 		}
-		return false;
+		$jsonData = array('success' => false,'message' => 'There are no feeds.','htmlMessage' => '<h1>There are no feeds.</h1>');
+		return $returnJSON ? json_encode($jsonData) : false;
 	}
 
 	public static function getMediaCategories()

@@ -15,11 +15,50 @@ var directors = {},
 	// FEEDS
 feeds.init                              = function()
 {
-	var f = this;
-	f.errors = {};
-	//f.errors = {};
-	
+	var f      = this;
+	f.errors   = {};
+	fe         = f.errors;
+	f.addNewFeedListener()
+	.get();
 
+	return f;
+};
+
+feeds.get                               = function()
+{
+	var f = this;
+
+	$.get(AJAX_FILE,{callback:'getFeeds'},function(data)
+	{
+		if(data.success)
+		{
+			$('#editFeedShell').find('#feedList').html(data.data);
+			f.addTableListeners();
+		}else
+		{
+			alert(data.message);
+		}
+	},'json');
+
+	return f;
+};
+
+feeds.addNewFeedListener                = function()
+{
+	var f = this;
+
+	$('#addFeedShell').find('#addBtnShell').find('#addFeedBtn').click(function()
+	{
+		//alert('blah');
+	});
+
+	return f;
+};
+
+feeds.addTableListeners                 = function()
+{
+	var f = this;
+	//alert('adding table listeners');
 	return f;
 };
 
