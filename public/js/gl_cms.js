@@ -11,28 +11,45 @@ var directors = {},
 	users     = {},
 	files     = {};
 
+// NOBABLE
+notable.init                            = function()
+{
+	n = this;
 
-	// FEEDS
+	
+
+	return n;
+};
+
+// FEEDS
 feeds.init                              = function()
 {
-	var f      = this;
-	f.errors   = {};
-	fe         = f.errors;
-	f.addNewFeedListener()
-	.get();
+	var f            = this,
+	fe               = f.errors  = {},
+	fo               = f.objects = {};
+	fo.addFeedShell  = $('#addFeedShell');
+	fo.editFeedShell = $('#editFeedShell');
+	fe.ERROR_1       = 'Please select a valid director.';
+	fe.ERROR_2       = 'Please select a valid category.';
+	fe.ERROR_3       = 'Please enter a valid feed address.';
+	fe.ERROR_4       = 'Please enter a valid category position.';
+	fe.ERROR_5       = 'The category position must be different than the original category position.';
+	f.addNewFeedListener().get();
 
 	return f;
 };
 
 feeds.get                               = function()
 {
-	var f = this;
+	var f = this,
+	fe    = f.errors,
+	fo    = f.objects;
 
 	$.get(AJAX_FILE,{callback:'getFeeds'},function(data)
 	{
 		if(data.success)
 		{
-			$('#editFeedShell').find('#feedList').html(data.data);
+			fo.editFeedShell.find('#feedList').html(data.data);
 			f.addTableListeners();
 		}else
 		{
@@ -45,11 +62,35 @@ feeds.get                               = function()
 
 feeds.addNewFeedListener                = function()
 {
-	var f = this;
+	var f = this,
+	fe    = f.errors,
+	fo    = f.objects,
+	directorId,
+	categoryId,
+	url;
 
-	$('#addFeedShell').find('#addBtnShell').find('#addFeedBtn').click(function()
+	fo.addFeedShell.find('#addBtnShell').find('#addFeedBtn').click(function()
 	{
-		//alert('blah');
+		directorId = parseInt(fo.addFeedShell.find('select#directors').val(),10);
+		categoryId = parseInt(fo.addFeedShell.find('select#mediaCategories').val(),10);
+		url        = String(fo.addFeedShell.find('[type="text"]#feedUrl').val());
+		if(!directorId)
+		{
+			alert(fe.ERROR_1);
+			return;
+		}
+		if(!categoryId)
+		{
+			alert(fe.ERROR_2);
+			return;
+		}
+		if(!$.trim(url))
+		{
+			alert(fe.ERROR_3);
+			return;
+		}
+
+		f.addFeed(directorId,categoryId,url);
 	});
 
 	return f;
@@ -57,9 +98,115 @@ feeds.addNewFeedListener                = function()
 
 feeds.addTableListeners                 = function()
 {
-	var f = this;
-	//alert('adding table listeners');
+	var f         = this,
+	fe            = f.errors,
+	fo            = f.objects,
+	feedId,
+	catPos;
+	fo.updateBtns = fo.editFeedShell.find('#feedList').find('button.updateFeedBtn');
+	fo.removeBtns = fo.editFeedShell.find('#feedList').find('button.removeFeedBtn');
+
+	fo.updateBtns.click(function()
+	{
+		newCatPos = parseInt($(this).parent().parent().find('input.feedCategoryPosition').val(),10);
+		oldCatPos = parseInt($(this).attr('catPos'),10);
+		feedId    = parseInt($(this).attr('feedId'),10);
+		f.updateFeed(feedId,newCatPos,oldCatPos);
+	});
+
+	fo.removeBtns.click(function()
+	{
+		feedId = parseInt($(this).attr('feedId'),10);
+		if(confirm('Are you sure you want to remove this feed?'))
+		{
+			f.removeFeed(feedId);
+		}
+	});
+
 	return f;
+};
+
+feeds.addFeed                           = function(directorId,categoryId,url)
+{
+	var f             = this,
+	params            = {};
+	params.directorId = parseInt(directorId,10);
+	params.categoryId = parseInt(categoryId,10);
+	params.url        = String(url);
+
+	$.get(AJAX_FILE,{callback:'addFeed',params:params},function(data)
+	{
+		if(data.success)
+		{
+			f.clearAddFeedInputs();
+			f.get();
+		}else
+		{
+			alert(data.message);
+		}
+	},'json');
+
+	return f;
+};
+
+feeds.updateFeed                        = function(feedId,newCatPos,oldCatPos)
+{
+	var f         = this,
+	fe            = f.errors,
+	fo            = f.objects,
+	params        = {};
+	params.feedId = parseInt(feedId,10);
+	params.catPos = parseInt(newCatPos,10);
+
+	if(newCatPos === oldCatPos)
+	{
+		alert(fe.ERROR_5);
+	}else if(isNaN(newCatPos) || newCatPos < 1)
+	{
+		alert(fe.ERROR_4);
+	}else
+	{
+		$.get(AJAX_FILE,{callback:'updateFeed',params:params},function(data)
+		{
+			if(data.success)
+			{
+				f.get();
+			}else
+			{
+				alert(data.message);
+			}
+		},'json');
+	}
+
+	return f;
+};
+
+feeds.removeFeed                        = function(id)
+{
+	var f = this,
+	feedId = parseInt(id,10);
+
+	$.get(AJAX_FILE,{callback:'removeFeed',params:feedId},function(data)
+	{
+		if(data.success)
+		{
+			f.get();
+		}else
+		{
+			alert(data.message);
+		}
+	},'json');
+
+	return f;
+};
+
+feeds.clearAddFeedInputs                = function()
+{
+	var f = this,
+	fo    = f.objects;
+	fo.addFeedShell.find('select#directors').val(0);
+	fo.addFeedShell.find('select#mediaCategories').val(0);
+	fo.addFeedShell.find('[type="text"]#feedUrl').val('');
 };
 
 // DIRECTORS

@@ -202,6 +202,49 @@ Q;
 		return $returnJSON ? json_encode($result) : false;
 	}
 
+	public static function addFeed($info,$returnJSON = true)
+	{
+		if(!is_array($info) ||
+		!array_key_exists('directorId',$info) ||
+		!array_key_exists('categoryId',$info) ||
+		!array_key_exists('url',$info) ||
+		!filter_var($info['url'],FILTER_VALIDATE_URL))
+		{
+			$result['success'] = false;
+			$result['message'] = 'The information provided is invalid.';
+			return $returnJSON ? json_encode($result) : false;
+		}
+
+		$link = self::openConnection();
+		$query = <<<Q
+INSERT INTO `mediaFeeds` (`mediaCategoryId`,`categoryPosition`,`directorId`,`feedURL`)
+VALUES(
+{$info['categoryId']},
+(SELECT `result`.`maxCategoryPosition`
+FROM (
+	SELECT MAX(`mediaFeeds`.`categoryPosition`) + 1 AS `maxCategoryPosition`
+	FROM `mediaFeeds`
+	WHERE `mediaFeeds`.`mediaCategoryID` = {$info['categoryId']}
+	) AS `result`
+),
+{$info['directorId']},
+'{$info['url']}'
+)
+Q;
+
+		self::queryDb($query);
+		if(mysql_affected_rows())
+		{
+			$result['success'] = true;
+			$result['message'] = 'Successfully added feed.';
+			return $returnJSON ? json_encode($result) : true;
+		}
+
+		$result['success'] = false;
+		$result['message'] = 'There was an error adding the feed.';
+		return $returnJSON ? json_encode($result) : false;
+	}
+
 	#====================================================================================
 	# SELECT METHODS
 	#====================================================================================
@@ -330,8 +373,8 @@ Q;
 
 	public static function getFeeds($returnJSON = true)
 	{
-		$link = self::openConnection();
-		$query =<<<Q
+		$link  = self::openConnection();
+		$query = <<<Q
 SELECT `mediaFeeds`.*,TRIM(CONCAT(`directors`.`firstName`,' ',`directors`.`lastName`)) AS `directorName`,`navigation`.`name` AS `categoryName`
 FROM `mediaFeeds`,`directors`,`mediaCategories`,`navigation`
 WHERE `mediaFeeds`.`directorID` = `directors`.`id`
@@ -350,8 +393,8 @@ Q;
 			if($returnJSON)
 			{
 				$data['success'] = true;
-				$data['data'] = '';
-				$catId = null;
+				$data['data']    = '';
+				$catId           = null;
 				foreach($feeds as $f)
 				{
 					if($f['mediaCategoryID'] !== $catId)
@@ -366,13 +409,13 @@ HTML_DATA;
 						$catId = $f['mediaCategoryID'];
 						self::resetAlt();
 					}
-					$altStr = self::altStr('class="altRow"');
-					$data['data'] .= <<<HTML_DATA
+					$altStr         = self::altStr('class="altRow"');
+					$data['data']  .= <<<HTML_DATA
 <tbody>
 	<tr {$altStr} rowId="{$f['id']}">
 		<td class="positionCol"><input class="feedCategoryPosition" type="text" value="{$f['categoryPosition']}"/></td>
 		<td class="nameCol">{$f['directorName']}</td>
-		<td class="updateCol"><button class="updateFeedBtn" name="" id="" feedId="{$f['id']}">Update</button></td>
+		<td class="updateCol"><button class="updateFeedBtn" name="" id="" feedId="{$f['id']}" catPos="{$f['categoryPosition']}">Update</button></td>
 		<td class="removeCol"><button class="removeFeedBtn" name="" id="" feedId="{$f['id']}">Remove</button></td>
 	</tr>
 </tbody>
@@ -383,8 +426,11 @@ HTML_DATA;
 			}
 			return $feeds;
 		}
-		$jsonData = array('success' => false,'message' => 'There are no feeds.','htmlMessage' => '<h1>There are no feeds.</h1>');
-		return $returnJSON ? json_encode($jsonData) : false;
+
+		$data['success']     = false;
+		$data['mesasge']     = 'There are no feeds.';
+		$data['htmlMessage'] = '<h1>' . $data['message'] . '</h1>';
+		return $returnJSON ? json_encode($data) : false;
 	}
 
 	public static function getMediaCategories()
@@ -406,6 +452,50 @@ Q;
 			return $cats;
 		}
 		return false;
+	}
+
+	public static function getNotables($returnJSON = true)
+	{
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `news`
+ORDER BY `news`.`timeAdded` DESC
+Q;
+
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			while($row = mysql_fetch_assoc($result))
+			{
+				$notables[] = $row;
+			}
+
+			if($returnJSON)
+			{
+				$data['success']     = true;
+				$data['message']     = 'Successfully retrieved notables.';
+				$data['htmlMessage'] = '<h1>' . $data['message'] . '<h1>';
+				$data['data']        = '';
+				foreach($notables as $n)
+				{
+					$data['data'] .= <<<HTML_DATA
+<div>
+	<div>image</div>
+	<div>title</div>
+	<div>url</div>
+</div>
+HTML_DATA;
+				}
+				return json_encode($data);
+			}
+
+			return $notables;
+		}
+
+		$data['success']     = false;
+		$data['message']     = 'There are no notables.';
+		$data['htmlMessage'] = '<h1>' . $data['message'] . '</h1>';
+		return $returnJSON ? json_encode($data) : false;
 	}
 
 	#====================================================================================
@@ -594,6 +684,39 @@ Q;
 		return $returnJSON ? json_encode($result) : false;
 	}
 
+	public static function updateFeed($info,$returnJSON = true)
+	{
+		if(!is_array($info) ||
+		!array_key_exists('feedId',$info) ||
+		!array_key_exists('catPos',$info))
+		{
+			$result['success'] = false;
+			$result['message'] = 'Please enter a valid category position.';
+			return $returnJSON ? json_encode($result) : false;
+		}
+
+		$link = self::openConnection();
+		$query = <<<Q
+UPDATE `mediaFeeds`
+SET `categoryPosition` = {$info['catPos']}
+WHERE `mediaFeeds`.`id` = {$info['feedId']}
+LIMIT 1
+Q;
+
+		self::queryDb($query);
+		if(mysql_affected_rows())
+		{
+			$result['success'] = true;
+			$result['message'] = 'Successfully updated feed.';
+			return $returnJSON ? json_encode($result) : true;
+		}
+
+		$result['success'] = false;
+		$result['message'] = 'There was an error updating the feed.';
+		return $returnJSON ? json_encode($result) : false;
+
+	}
+
 	#====================================================================================
 	# DELETE METHODS
 	#====================================================================================
@@ -727,6 +850,31 @@ Q;
 		}
 		$result['success'] = false;
 		$result['message'] = 'There was an error removing the office.';
+		return $returnJSON ? json_encode($result) : false;
+	}
+
+	public static function removeFeed($feedId,$returnJSON = true)
+	{
+		(int) $feedId;
+		$link = self::openConnection();
+
+		$query = <<<Q
+DELETE FROM `mediaFeeds`
+WHERE `mediaFeeds`.`id` = {$feedId}
+LIMIT 1
+Q;
+
+		self::queryDb($query);
+
+		if(mysql_affected_rows())
+		{
+			$result['success'] = true;
+			$result['message'] = 'Feed was successfully removed.';
+			return $returnJSON ? json_encode($result) : true;
+		}
+
+		$result['success'] = false;
+		$result['message'] = 'There was an error removing the feed.';
 		return $returnJSON ? json_encode($result) : false;
 	}
 

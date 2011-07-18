@@ -9,10 +9,16 @@ if(!$directors && !$mediaCategories)
 	die('There was an error retrieving data for this page.');
 }?>
 
+
+<!-- ============ -->
+<!-- = ADD FEED = -->
+<!-- ============ -->
+
 <div id="addFeedShell">
 	<h3>Add Feed</h3>
 
 	<select name="directors" id="directors">
+		<option value="0" selected="selected">Select a director</option>
 	<?php
 	foreach($directors as $d)
 	{?>
@@ -21,6 +27,7 @@ if(!$directors && !$mediaCategories)
 	</select>
 
 	<select name="mediaCategories" id="mediaCategories">
+		<option value="0" selected="selected">Select a category</option>
 	<?php
 	foreach($mediaCategories as $mc)
 	{?>
@@ -28,10 +35,15 @@ if(!$directors && !$mediaCategories)
 	<?}?>
 	</select>
 
-	<input type="text" name="feedUrl" id="feedUrl" value="Feed URL"/>
+	<input type="text" name="feedUrl" id="feedUrl" value="URL"/>
 
 	<div id="addBtnShell"><button id="addFeedBtn"></button></div>
 </div>
+
+
+<!-- ============= -->
+<!-- = EDIT FEED = -->
+<!-- ============= -->
 
 <div id="editFeedShell">
 	<h3>Edit Feed</h3>

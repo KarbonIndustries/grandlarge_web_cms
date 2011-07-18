@@ -4,7 +4,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.37)
 # Database: grandlargeinc_com_teset_site_aplus_net
-# Generation Time: 2011-07-08 15:19:34 -0400
+# Generation Time: 2011-07-18 07:01:14 -0400
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -83,9 +83,7 @@ VALUES
 	(2,1,'Paris','Grand Large Inc.','22 Rue de Navarin','','','Paris',51,'75009','France','Steven','Horton','','','','','33143060330','info@grandlargeinc.com','www.grandlargeinc.com'),
 	(3,2,'East Coast','Fm Artist Management','30 Irving Place','6th Floor','','New York',32,'10013','USA','Carl','Forsberg','Marianne','McCarley','','','2125812200','carl@fmartist.com','www.forsbergmccarley.com'),
 	(4,2,'Midwest','Hilly Reps','680 North Lake Shore Drive','Suite 320','','Chicago',13,'60611','USA','Hillary','Herbst','Laurel','Dobose','','','3129441100','hillary@hillyreps.com','www.hillyreps.com'),
-	(5,1,'West Coast','Two Tricky Pony, Inc.','21816 Grovepark Drive','','','Santa Clarita',5,'91350','USA','Jonathan','Miller<br />Executive Producer','','','','','2123008962','jonathan@grandlargeinc.com','www.grandlargeinc.com'),
-	(17,2,'Germany','DareDevil Software Corp','','','','',51,'','','Shammel','Lee','','','','','2125558789','us@daredevilsoftware.com','daredevilsoft.com'),
-	(20,2,'Sadfdf','Asdfadf','','','','',51,'','','','','','','','','','','');
+	(5,1,'West Coast','Grand Large Inc.','21816 Grovepark Drive','','','Santa Clarita',5,'91350','USA','Jonathan','Miller','Executive','Producer','','','2123008962','jonathan@grandlargeinc.com','www.grandlargeinc.com');
 
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -108,7 +106,7 @@ CREATE TABLE `directors` (
   KEY `active` (`active`),
   KEY `firstName` (`firstName`),
   KEY `lastName` (`lastName`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `directors` WRITE;
 /*!40000 ALTER TABLE `directors` DISABLE KEYS */;
@@ -129,7 +127,8 @@ VALUES
 	(16,1,'Ronald','Wohlman','','',''),
 	(17,1,'Shizue','','','',''),
 	(18,1,'Leif-Husted','Jensen','','',''),
-	(19,1,'Andy','Tennant','Andy Tennant is an American screenwriter and director that made his way into film through acting and television directing. \n\nHe is credited for his work on the worldwide blockbuster Hitch, starring Will Smith, along with the popular romantic comedies Sweet Home Alabama, starring Reese Witherspoon, The Bounty Hunter and Fool\'s Gold.\n\nHe also directed Ever After, a film inspired by the fairy tale Cinderella, starring Drew Barrymore and Angelica Huston and the classic Anna and the King, with Jodie Foster and Chow Yun-Fat, which received two Academy Award nominations.','','');
+	(19,1,'Andy','Tennant','Andy Tennant is an American screenwriter and director that made his way into film through acting and television directing. \n\nHe is credited for his work on the worldwide blockbuster Hitch, starring Will Smith, along with the popular romantic comedies Sweet Home Alabama, starring Reese Witherspoon, The Bounty Hunter and Fool\'s Gold.\n\nHe also directed Ever After, a film inspired by the fairy tale Cinderella, starring Drew Barrymore and Angelica Huston and the classic Anna and the King, with Jodie Foster and Chow Yun-Fat, which received two Academy Award nominations.','',''),
+	(24,1,'Tall Black','Girls','Way back in the early days of 2010, on a dilapidated street in Brooklyn, Tall Black Girls was conceived. Like most pregnancies, it was the result of bathtub gin and vulnerability. \"The Girls\" formed with a simple mission and purpose: to create a one stop creative shop that produces films for a variety of clients and genres. The final product to be high on style and low on barriers. \n\nThe Girls specialize in managing projects beginning to end. From production to post-production and whatever there is in-between. But please, don\'t just take this bio\'s word, it\'s meant to talk them up. Meet them, talk to them, let them buy you a drink. In the morning you\'ll be completely free of guilt.','','');
 
 /*!40000 ALTER TABLE `directors` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -198,7 +197,7 @@ CREATE TABLE `mediaFeeds` (
   KEY `directorID` (`directorID`),
   CONSTRAINT `mediafeeds_ibfk_1` FOREIGN KEY (`directorID`) REFERENCES `directors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mediafeeds_ibfk_2` FOREIGN KEY (`mediaCategoryID`) REFERENCES `mediacategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `mediaFeeds` WRITE;
 /*!40000 ALTER TABLE `mediaFeeds` DISABLE KEYS */;
@@ -217,10 +216,11 @@ VALUES
 	(12,5,1,3,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/e563367bd2ccfb3d63108e728730e69b/','2011-01-03 23:55:25','0000-00-00 00:00:00'),
 	(13,5,2,11,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/2838ddc0a0a766181709e98d178b0267/','2011-01-03 23:55:30','0000-00-00 00:00:00'),
 	(14,5,3,12,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/e99ac277129794a1147304223b99d247/','2011-01-03 23:55:37','0000-00-00 00:00:00'),
-	(20,6,3,16,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/319800429084791d370a9733e4861d9a/','2011-02-05 15:51:16','0000-00-00 00:00:00'),
+	(20,6,2,16,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/319800429084791d370a9733e4861d9a/','2011-02-05 15:51:16','0000-00-00 00:00:00'),
 	(21,3,3,17,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/764f64738132ac5166b772ffe733d4b9/','2011-02-05 15:55:15','0000-00-00 00:00:00'),
-	(22,6,2,18,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/a9e971d1fd2f5d6ee38575437e8024a4/','2011-03-06 16:56:28','0000-00-00 00:00:00'),
-	(24,2,4,19,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/b1a2d0ec17d09b41d89aaae557e20ae8/','2011-07-03 18:11:16','0000-00-00 00:00:00');
+	(22,6,3,18,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/a9e971d1fd2f5d6ee38575437e8024a4/','2011-03-06 16:56:28','0000-00-00 00:00:00'),
+	(24,2,4,19,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/b1a2d0ec17d09b41d89aaae557e20ae8/','2011-07-03 18:11:16','0000-00-00 00:00:00'),
+	(52,6,1,24,'http://www.wdcdn.net/rss/presentation/library/client/glx/id/ac03c9a256442fa8a8349d353989b644','2011-07-17 23:50:50','0000-00-00 00:00:00');
 
 /*!40000 ALTER TABLE `mediaFeeds` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -406,13 +406,16 @@ CREATE TABLE `users` (
   KEY `key` (`key`),
   KEY `userTypeId` (`userTypeId`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`userTypeId`) REFERENCES `usertypes` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`,`userTypeId`,`email`,`key`)
 VALUES
-	(1,3,'sidekick2rida@gmail.com','letmein');
+	(1,3,'sidekick2rida@gmail.com','123456'),
+	(2,2,'steven@grandlargeinc.com','123456'),
+	(3,2,'george@grandlargeinc.com','123456'),
+	(4,2,'kara@grandlargeinc.com','123456');
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
