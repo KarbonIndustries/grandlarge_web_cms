@@ -14,9 +14,50 @@ var directors = {},
 // NOBABLE
 notable.init                            = function()
 {
-	n = this;
+	var n               = this,
+	ne                  = n.errors = {},
+	no                  = n.objects = {};
+	no.addNotableShell  = $('#addNotableShell');
+	no.editNotableShell = $('#editNotableShell');
+	n.get();
+	
+
+	return n;
+};
+
+notable.get                             = function()
+{
+	var n = this,
+	ne    = n.errors,
+	no    = n.objects;
 
 	
+	$.get(AJAX_FILE,{callback:'getNotables'},function(data)
+	{
+		no.editNotableShell.find('#notableList').html(data.data);
+		no.updateBtns = no.editNotableShell.find('#notableList').find('td.updateCell').find('button');
+		no.removeBtns = no.editNotableShell.find('#notableList').find('td.removeCell').find('button');
+		n.addTableListeners();
+	},'json');
+
+	return n;
+};
+
+notable.addTableListeners               = function()
+{
+	var n = this,
+	ne    = n.errors,
+	no    = n.objects;
+
+	no.updateBtns.click(function()
+	{
+		alert('update');
+	});
+
+	no.removeBtns.click(function()
+	{
+		alert('remove');
+	});
 
 	return n;
 };

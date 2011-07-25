@@ -5,7 +5,7 @@ button{cursor:pointer;}
 img{border:none;}
 ul{list-style-type:none;padding:0;}
 
-#navShell{border-right:1px solid #65A7C0;position:absolute;top:0;bottom:0;z-index:2;width:200px;text-align:right;}
+#navShell{border-right:1px solid #65A7C0;position:fixed;top:0;bottom:0;z-index:2;width:200px;text-align:right;}
 	#navShell>div>h1{padding-right:15px;}
 	#nav>li{display:block;cursor:pointer;}
 		#nav>li>a{color:#FFFFFF;font-size:16px;padding:8px 15px;display:block;}
@@ -38,6 +38,42 @@ ul{list-style-type:none;padding:0;}
 		#editDirectorShell #updateBtnShell{text-align:right;width:600px;margin-top:10px;}
 		#editDirectorShell #updateDirectorBtn{background:url('/img/sprites.png') no-repeat scroll 0 -56px transparent;border:none;width:100px;height:38px;}
 
+	/* ========= */
+	/* = FEEDS = */
+	/* ========= */
+	#addFeedShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
+	#addFeedShell>div{margin:10px 0;}
+		#addFeedShell input#feedUrl{width:336px;}
+		#addFeedShell #addBtnShell{text-align:right;width:600px;margin-top:10px;}
+		#addFeedShell #addFeedBtn{background:url('/img/sprites.png') no-repeat scroll 0 0 transparent;border:none;width:84px;height:38px;}
+	#editFeedShell{}
+		#editFeedShell table#feedList{}
+		#editFeedShell table#feedList th{text-align:left;padding-top:12px;color:#65A7C0;font-size:15px;}
+		#editFeedShell table#feedList td.nameCol{width:500px;}
+		#editFeedShell table#feedList input{width:16px;}
+
+	/* =========== */
+	/* = NOTABLE = */
+	/* =========== */
+	#addNotableShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
+	#addNotableTextRow{margin-bottom:15px;}
+	#addNotableButtonRow{margin-bottom:15px;}
+	#addNotableShell input[type="text"]#notableTitle{width:250px;margin-right:10px;}
+	#addNotableShell input[type="text"]#notableURL{width:400px;}
+	#addNotableShell input[type="file"]{color:white;}
+	#editNotableShell{}
+		#editNotableShell #notableList td{vertical-align:middle;}
+		#editNotableShell #notableList td.titleCell{padding-left:13px;}
+		#editNotableShell #notableList td.titleCell input[type="text"]{width:200px;}
+		#editNotableShell #notableList td.urlCell{padding-left:13px;}
+		#editNotableShell #notableList td.urlCell input[type="text"]{width:400px;}
+		#editNotableShell #notableList td.removeCell{padding-right:5px;}
+
+	/* ========= */
+	/* = ABOUT = */
+	/* ========= */
+
+
 	/* =========== */
 	/* = CONTACT = */
 	/* =========== */
@@ -59,33 +95,21 @@ ul{list-style-type:none;padding:0;}
 		#officeTable td{padding:2px 5px;}
 		#officeTable td.companyName{width:200px;}
 		#officeTable td.officeName{width:150px;}
-		#editOffice{margin-left:30px;padding-bottom:100px;}
+		#editOffice{margin-left:30px;}
 		#editOffice>div{margin:3px 0;}
 		#editOffice label{font-weight:bold;width:150px;display:block;float:left;text-align:right;padding-right:20px;}
 		#editOffice input{width:200px;margin-right:10px;}
 		#editOffice #updateOfficeBtnShell{text-align:right;margin-top:10px;}
 		#editOffice #updateOfficeBtn{background:url('/img/sprites.png') no-repeat scroll 0 -56px transparent;border:none;width:100px;height:38px;}
 
-	/* ========= */
-	/* = FEEDS = */
-	/* ========= */
-	#addFeedShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
-	#addFeedShell>div{margin:10px 0;}
-		#addFeedShell input#feedUrl{width:336px;}
-		#addFeedShell #addBtnShell{text-align:right;width:600px;margin-top:10px;}
-		#addFeedShell #addFeedBtn{background:url('/img/sprites.png') no-repeat scroll 0 0 transparent;border:none;width:84px;height:38px;}
-	#editFeedShell{}
-		#editFeedShell table#feedList{}
-		#editFeedShell table#feedList th{text-align:left;padding-top:12px;color:#65A7C0;font-size:15px;}
-		#editFeedShell table#feedList td.nameCol{width:500px;}
-		#editFeedShell table#feedList input{width:16px;}
+		/* ========= */
+		/* = USERS = */
+		/* ========= */
 
-	/* =========== */
-	/* = NOTABLE = */
-	/* =========== */
-	#addNotableShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
-	#addNotableShell [type="file"]{color:white;}
 
+		/* ========= */
+		/* = FILES = */
+		/* ========= */
 
 .hidden{display:none;}
 tr.altRow{background:#141414;}

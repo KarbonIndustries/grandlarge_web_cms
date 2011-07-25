@@ -13,13 +13,15 @@ $PAGE = $_SERVER['PHP_SELF'] . '?p=notable';
 
 	<!-- upload form -->
 	<div id="">
-		<form name="" action="<?= $PAGE ?>?p=notable" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
-			<div id="">
-				<input type="hidden" name="MAX_FILE_SIZE" value="30000">
-				<input id="" name="" type="text" value="Title"/>
-				<input id="" name="" type="text" value="URL"/>
+		<form name="" action="<?= $PAGE ?>" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
+			<input type="hidden" name="MAX_FILE_SIZE" value="30000">
+			<div id="addNotableTextRow">
+				<input id="notableTitle" name="notableTitle" type="text" value="Title"/>
+				<input id="notableURL" name="notableURL" type="text" value="URL"/>
+			</div>
+			<div id="addNotableButtonRow">
 				<input id="image" name="image" type="file"/>
-				<button type="submit">Upload</button>
+				<input type="submit" value="Upload"></input>
 			</div>
 		</form>
 	</div>
@@ -33,12 +35,8 @@ $PAGE = $_SERVER['PHP_SELF'] . '?p=notable';
 <div id="editNotableShell">
 	<h3>Edit Notable</h3>
 
-	get notable items by date desc<br />
-	date -- image -- title/link -- url -- remove<br />
-	date -- image -- title/link -- url -- remove<br />
-	date -- image -- title/link -- url -- remove<br />
-	date -- image -- title/link -- url -- remove<br />
-	date -- image -- title/link -- url -- remove
+	<table id="notableList" border="0" cellspacing="0" cellpadding="2">
+	</table>
 </div>
 
 
@@ -137,3 +135,9 @@ function deleteItem()
 }
 
 ?>
+
+<div style="margin-bottom:100px"></div>
+
+<script type="text/javascript" charset="utf-8">
+	notable.init();
+</script>

@@ -478,14 +478,20 @@ Q;
 				$data['data']        = '';
 				foreach($notables as $n)
 				{
-					$data['data'] .= <<<HTML_DATA
-<div>
-	<div>image</div>
-	<div>title</div>
-	<div>url</div>
-</div>
+					$IMG_URL        = NOTABLE_DIR . $n['image'];
+					$IMG_WIDTH      = EDIT_NOTABLE_IMG_WIDTH;
+					$altStr         = self::altStr('class="altRow"');
+					$data['data']  .= <<<HTML_DATA
+<tr {$altStr}>
+	<td class="imgCell"><img src="{$IMG_URL}" width="{$IMG_WIDTH}"/></td>
+	<td class="titleCell"><input type="text" value="{$n['title']}"/></td>
+	<td class="urlCell"><input type="text" value="{$n['url']}"/></td>
+	<td class="updateCell"><button rowId="{$n['id']}">Update</button></td>
+	<td class="removeCell"><button rowId="{$n['id']}">Remove</button></td>
+</tr>
 HTML_DATA;
 				}
+				self::resetAlt();
 				return json_encode($data);
 			}
 

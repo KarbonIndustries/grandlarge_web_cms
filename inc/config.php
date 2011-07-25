@@ -39,4 +39,5 @@ define('EMAIL_ABBR','E:');
 #MISC
 define('NL',"\n");
 define('EOL',PHP_EOL);
+define('EDIT_NOTABLE_IMG_WIDTH',100);
 ?>
