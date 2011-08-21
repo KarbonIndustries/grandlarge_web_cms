@@ -51,13 +51,61 @@ notable.addTableListeners               = function()
 
 	no.updateBtns.click(function()
 	{
-		alert('update');
+		var i = $(this),
+		title = i.parent().parent().find('td.titleCell').find('input[type=text]').val(),
+		url   = i.parent().parent().find('td.urlCell').find('input[type=text]').val(),
+		id    = parseInt(i.attr('rowId'),10);
+		n.update(title,url,id);
 	});
 
 	no.removeBtns.click(function()
 	{
-		alert('remove');
+		var i = $(this),
+		title = i.parent().parent().find('td.titleCell').find('input[type=text]').val(),
+		id    = parseInt(i.attr('rowId'),10);
+		if(confirm('Are you sure you want to remove ' + title))
+		{
+			n.remove(id);
+		}
 	});
+
+	return n;
+};
+
+notable.update                          = function(title,url,id)
+{
+	var n        = this,
+	ne           = n.errors,
+	no           = n.objects,
+	params       = {};
+	params.title = title;
+	params.url   = url;
+	params.id    = id;
+
+	$.get(AJAX_FILE,{callback:'updateNotable',params:params},function(data)
+	{
+		alert(data.msg);
+	},'json');
+
+	return n;
+};
+
+notable.remove                          = function(id)
+{
+	var n = this,
+	ne    = n.errors,
+	no    = n.objects;
+
+	$.get(AJAX_FILE,{callback:'removeNotable',params:id},function(data)
+	{
+		if(data.success)
+		{
+			n.get();
+		}else
+		{
+			alert(data.msg);
+		}
+	},'json');
 
 	return n;
 };

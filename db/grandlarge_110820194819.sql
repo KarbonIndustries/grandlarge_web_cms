@@ -1,17 +1,20 @@
-# Sequel Pro dump
-# Version 2492
-# http://code.google.com/p/sequel-pro
-#
-# Host: 127.0.0.1 (MySQL 5.1.37)
-# Database: grandlargeinc_com_teset_site_aplus_net
-# Generation Time: 2011-07-18 07:01:14 -0400
 # ************************************************************
+# Sequel Pro SQL dump
+# Version 3389
+#
+# http://www.sequelpro.com/
+# http://code.google.com/p/sequel-pro/
+#
+# Host: 127.0.0.1 (MySQL 5.5.9)
+# Database: grandlarge
+# Generation Time: 2011-08-20 19:49:54 -0400
+# ************************************************************
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -31,7 +34,8 @@ CREATE TABLE `about` (
 
 LOCK TABLES `about` WRITE;
 /*!40000 ALTER TABLE `about` DISABLE KEYS */;
-INSERT INTO `about` (`id`,`image`,`col1`,`col2`)
+
+INSERT INTO `about` (`id`, `image`, `col1`, `col2`)
 VALUES
 	(1,'gl_about.jpg','Grand Large is an international production company founded by Steve Horton in Paris, France June 2001.\n\nTogether with a diverse group of directors and designers, Grand Large is known for its ability to deliver effective commercials, new media content and music videos.','Clients include Jaguar, Ray Ban, Hilfiger, Cartier, L\'oreal, Coca Cola, Avon, Marionnaud, Mars, COI, Schwinn, Verizon, Nivea, Moby, Sundance Channel, The New York Times&hellip;\n\nOffices in New York and Paris give us the flexibility to produce and foster creative talent on the international stage.');
 
@@ -73,11 +77,12 @@ CREATE TABLE `contacts` (
   KEY `officeCategoryID` (`officeCategoryID`),
   CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`stateID`) REFERENCES `states` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `contacts_ibfk_3` FOREIGN KEY (`officeCategoryID`) REFERENCES `officecategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-INSERT INTO `contacts` (`id`,`officeCategoryID`,`officeLocale`,`companyName`,`address1`,`address2`,`address3`,`city`,`stateID`,`zip`,`country`,`contact1FirstName`,`contact1LastName`,`contact2FirstName`,`contact2LastName`,`contact3FirstName`,`contact3LastName`,`phone`,`email`,`websiteURL`)
+
+INSERT INTO `contacts` (`id`, `officeCategoryID`, `officeLocale`, `companyName`, `address1`, `address2`, `address3`, `city`, `stateID`, `zip`, `country`, `contact1FirstName`, `contact1LastName`, `contact2FirstName`, `contact2LastName`, `contact3FirstName`, `contact3LastName`, `phone`, `email`, `websiteURL`)
 VALUES
 	(1,1,'New York','Grand Large Inc.','54 Mercer Street','','','New York',32,'10013','USA','Steven','Horton','','','','','2129888390','steven@grandlargeinc.com','www.grandlargeinc.com'),
 	(2,1,'Paris','Grand Large Inc.','22 Rue de Navarin','','','Paris',51,'75009','France','Steven','Horton','','','','','33143060330','info@grandlargeinc.com','www.grandlargeinc.com'),
@@ -106,11 +111,12 @@ CREATE TABLE `directors` (
   KEY `active` (`active`),
   KEY `firstName` (`firstName`),
   KEY `lastName` (`lastName`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `directors` WRITE;
 /*!40000 ALTER TABLE `directors` DISABLE KEYS */;
-INSERT INTO `directors` (`id`,`active`,`firstName`,`lastName`,`bio`,`websiteURL`,`description`)
+
+INSERT INTO `directors` (`id`, `active`, `firstName`, `lastName`, `bio`, `websiteURL`, `description`)
 VALUES
 	(1,1,'Tracey','Rowe','Tracey\'s work is known for compelling rich images and stylish details. She thrives on bringing the emotional content out of each visual while at the same time enhancing the concept of the film.','http://www.traceyrowe.com',''),
 	(2,1,'Gaysorn','Thavat','Gaysorn\'s work has a distinctive and smart humor infused with a stylish and fresh approach.  From drama to comedy, she is recognized for her strong visuals, inspiring performances and passion for storytelling.\n\nHer commercial titled \"Dying Old\" for the Breast Cancer Research Trust in New Zealand was awarded a Gold Lion at the Cannes International Advertising Festival 2009.','',''),
@@ -124,11 +130,12 @@ VALUES
 	(11,1,'Marc','Caro','Marc Caro, is a French filmmaker and illustrator, best known for his co-directing projects, <em>Delicatessen</em> and <em>City of Lost Children</em>.  He is noted for his creative character design, which is present in his latest sci-fi inspired feature film <em>Dante 01</em>.','',''),
 	(12,1,'Tran anh','Hung','French-Vietnamese director, Tran Anh Hung has a strong eye for color, texture and beauty.  His Oscar-nominated debut (for Best foreign film) was with <em>The Scent of Green Papaya</em>, which also won two top prizes at the prestigious 1993 Cannes Film Festival.','',''),
 	(13,1,'Showreel','','','','grand large showreel'),
-	(16,1,'Ronald','Wohlman','','',''),
-	(17,1,'Shizue','','','',''),
-	(18,1,'Leif-Husted','Jensen','','',''),
+	(16,1,'Ronald','Wohlman','Director Ronald Wohlman has enjoyed an eclectic advertising career that\'s seen him living in Johannesburg, Toronto, New York, Paris and now London.\n\nHe is passionate about different cultures and is fueled by all things creative â€“ art, photography, food, fashion, design, literature, music and film.  A true internationalist, Martin is fortunate to travel extensively, always drawing on his experiences to color his work.','',''),
+	(17,1,'Shizue','','Shizue is an American director who has lived and worked in Asia, Australia, the U.S., and is now based in Europe.\n\nInitially graduating with a degree in architecture, Shizue realized film to be her true love and the synthesis of all her interests.\n\nHer short films range from a documentary on Jackie Chan to a contemporary take on Little Red Riding Hood, which have aired on television stations throughout Europe.\n\nIn 2000, Shizue moved to Vienna, Austria where she has been directing commercials for international clients ever since.  Her individual approach and feminine sensibilities are expressed in images that are stylish and sensual, always capturing the moment.','',''),
+	(18,1,'Leif Husted-Jensen','','Leif-Husted Jensen is an accomplished commercial director and cinematographer based in New York City.  As a filmmaker, he has been drawn to storytelling and specializes in documentary media.\n\nWith his strong sense of visual composition and ability to connect with people, Leif constantly strives to create performances that are both compelling and truly original.','',''),
 	(19,1,'Andy','Tennant','Andy Tennant is an American screenwriter and director that made his way into film through acting and television directing. \n\nHe is credited for his work on the worldwide blockbuster Hitch, starring Will Smith, along with the popular romantic comedies Sweet Home Alabama, starring Reese Witherspoon, The Bounty Hunter and Fool\'s Gold.\n\nHe also directed Ever After, a film inspired by the fairy tale Cinderella, starring Drew Barrymore and Angelica Huston and the classic Anna and the King, with Jodie Foster and Chow Yun-Fat, which received two Academy Award nominations.','',''),
-	(24,1,'Tall Black','Girls','Way back in the early days of 2010, on a dilapidated street in Brooklyn, Tall Black Girls was conceived. Like most pregnancies, it was the result of bathtub gin and vulnerability. \"The Girls\" formed with a simple mission and purpose: to create a one stop creative shop that produces films for a variety of clients and genres. The final product to be high on style and low on barriers. \n\nThe Girls specialize in managing projects beginning to end. From production to post-production and whatever there is in-between. But please, don\'t just take this bio\'s word, it\'s meant to talk them up. Meet them, talk to them, let them buy you a drink. In the morning you\'ll be completely free of guilt.','','');
+	(24,1,'Tall Black','Girls','Way back in the early days of 2010, on a dilapidated street in Brooklyn, Tall Black Girls was conceived. Like most pregnancies, it was the result of bathtub gin and vulnerability. \"The Girls\" formed with a simple mission and purpose: to create a one stop creative shop that produces films for a variety of clients and genres. The final product to be high on style and low on barriers. \n\nThe Girls specialize in managing projects beginning to end. From production to post-production and whatever there is in-between. But please, don\'t just take this bio\'s word, it\'s meant to talk them up. Meet them, talk to them, let them buy you a drink. In the morning you\'ll be completely free of guilt.','',''),
+	(25,1,'Kanye','West','','http://www.kanyewest.com/','');
 
 /*!40000 ALTER TABLE `directors` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -162,11 +169,12 @@ CREATE TABLE `mediaCategories` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `navId` (`navId`),
   CONSTRAINT `mediacategories_ibfk_1` FOREIGN KEY (`navId`) REFERENCES `navigation` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `mediaCategories` WRITE;
 /*!40000 ALTER TABLE `mediaCategories` DISABLE KEYS */;
-INSERT INTO `mediaCategories` (`id`,`navId`)
+
+INSERT INTO `mediaCategories` (`id`, `navId`)
 VALUES
 	(1,1),
 	(2,2),
@@ -197,11 +205,12 @@ CREATE TABLE `mediaFeeds` (
   KEY `directorID` (`directorID`),
   CONSTRAINT `mediafeeds_ibfk_1` FOREIGN KEY (`directorID`) REFERENCES `directors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mediafeeds_ibfk_2` FOREIGN KEY (`mediaCategoryID`) REFERENCES `mediacategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `mediaFeeds` WRITE;
 /*!40000 ALTER TABLE `mediaFeeds` DISABLE KEYS */;
-INSERT INTO `mediaFeeds` (`id`,`mediaCategoryID`,`categoryPosition`,`directorID`,`feedURL`,`timeAdded`,`lastUpdated`)
+
+INSERT INTO `mediaFeeds` (`id`, `mediaCategoryID`, `categoryPosition`, `directorID`, `feedURL`, `timeAdded`, `lastUpdated`)
 VALUES
 	(1,1,1,13,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/8fecac0a24cf58794b1954d338b641aa/','2011-01-03 23:49:03','0000-00-00 00:00:00'),
 	(2,2,1,1,'http://www.wdcdn.net/rss/presentation/library/client/grandlarge/id/760dd15520de190a03949d5cd60cd065/','2011-01-03 23:51:09','0000-00-00 00:00:00'),
@@ -235,11 +244,12 @@ CREATE TABLE `navigation` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `navigation` WRITE;
 /*!40000 ALTER TABLE `navigation` DISABLE KEYS */;
-INSERT INTO `navigation` (`id`,`name`)
+
+INSERT INTO `navigation` (`id`, `name`)
 VALUES
 	(1,'Showreel'),
 	(2,'Commercials'),
@@ -269,17 +279,18 @@ CREATE TABLE `news` (
   `timeAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `timeAdded` (`timeAdded`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 LOCK TABLES `news` WRITE;
 /*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` (`id`,`title`,`image`,`desc`,`url`,`timeAdded`)
+
+INSERT INTO `news` (`id`, `title`, `image`, `desc`, `url`, `timeAdded`)
 VALUES
-	(1,'BUF','buf.jpg','BUF','http://www.buf.com','2011-01-10 13:01:09'),
+	(1,'BUF','buf.jpg','BUF','http://www.robbersdog.co.nz','2011-01-10 13:01:09'),
 	(2,'Walkabout Films','walkabout.jpg','Walkabout Films','http://www.walkaboutfilms.comau.com','2011-01-10 12:02:15'),
 	(5,'Mac Guff','mac_guff.jpg','Mac Guff','http://www.macguff.com','2011-01-10 11:02:44'),
 	(4,'Animal Logic','animal_logic.jpg','Animal Logic','http://www.animallogic.com','2011-01-10 10:03:41'),
-	(3,'Robbers Dog','robbers_dog.jpg','Robbers Dog','http://www.robbersdog.co.nz','2011-01-10 09:03:44'),
+	(3,'Robber\'s Dog','robbers_dog.jpg','Robbers Dog','http://www.robbersdog.co.nz','2011-01-10 09:03:44'),
 	(7,'Tom Kan Design','tom_kan.jpg','Tom Kan Design','http://www.tomkandesign.com','2011-01-10 08:05:00'),
 	(6,'Francesco Carrozzini','francesco_carrozzini.jpg','Francesco Carrozzini','http://www.francescocarrozzini.com','2011-01-10 07:06:03'),
 	(8,'Rockwood Music Hall','rockwood_music_hall.jpg','Rockwood Music Hall','http://www.rockwoodmusichall.com','2011-01-10 06:50:32'),
@@ -305,11 +316,12 @@ CREATE TABLE `officeCategories` (
   `name` varchar(40) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `officeCategories` WRITE;
 /*!40000 ALTER TABLE `officeCategories` DISABLE KEYS */;
-INSERT INTO `officeCategories` (`id`,`name`)
+
+INSERT INTO `officeCategories` (`id`, `name`)
 VALUES
 	(1,'Offices'),
 	(2,'Sales');
@@ -327,11 +339,12 @@ CREATE TABLE `states` (
   `id` tinyint(2) unsigned NOT NULL AUTO_INCREMENT,
   `abbreviation` char(2) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `states` WRITE;
 /*!40000 ALTER TABLE `states` DISABLE KEYS */;
-INSERT INTO `states` (`id`,`abbreviation`)
+
+INSERT INTO `states` (`id`, `abbreviation`)
 VALUES
 	(1,'AL'),
 	(2,'AK'),
@@ -406,11 +419,12 @@ CREATE TABLE `users` (
   KEY `key` (`key`),
   KEY `userTypeId` (`userTypeId`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`userTypeId`) REFERENCES `usertypes` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`,`userTypeId`,`email`,`key`)
+
+INSERT INTO `users` (`id`, `userTypeId`, `email`, `key`)
 VALUES
 	(1,3,'sidekick2rida@gmail.com','123456'),
 	(2,2,'steven@grandlargeinc.com','123456'),
@@ -432,11 +446,12 @@ CREATE TABLE `userTypes` (
   `accessLevel` tinyint(2) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `accessLevel` (`accessLevel`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `userTypes` WRITE;
 /*!40000 ALTER TABLE `userTypes` DISABLE KEYS */;
-INSERT INTO `userTypes` (`id`,`name`,`accessLevel`)
+
+INSERT INTO `userTypes` (`id`, `name`, `accessLevel`)
 VALUES
 	(1,'client',1),
 	(2,'admin',2),
@@ -447,12 +462,9 @@ UNLOCK TABLES;
 
 
 
-
-
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

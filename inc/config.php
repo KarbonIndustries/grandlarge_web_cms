@@ -4,16 +4,17 @@ define('DS',DIRECTORY_SEPARATOR);
 define('FS','/');
 define('PD','..' . DS);
 define('ROOT', $_SERVER['DOCUMENT_ROOT'] . DS);
+define('LOCAL_STORAGE_DIR',ROOT . PD . 'storage' . FS);
+define('FILE_DIR',LOCAL_STORAGE_DIR . 'files' . FS);
 define('INC_DIR',ROOT . PD . 'inc' . DS);
 define('CLASS_DIR',ROOT . PD . 'inc' . DS . 'classes' . DS);
 define('ELEMENT_DIR',ROOT . PD . 'inc' . DS . 'elements' . DS);
 define('FLOURISH_DIR',CLASS_DIR . 'flourish' . DS);
 
 #WEB DIRECTORIES
-define('STORAGE_DIR',FS . 'storage' . FS);
-define('FILE_DIR',STORAGE_DIR . 'files' . FS);
-define('NOTABLE_DIR',STORAGE_DIR . 'notable' . FS);
-define('ABOUT_DIR',STORAGE_DIR . 'about' . FS);
+define('WEB_STORAGE_DIR',FS . 'storage' . FS);
+define('NOTABLE_DIR',WEB_STORAGE_DIR . 'notable' . FS);
+define('ABOUT_DIR',WEB_STORAGE_DIR . 'about' . FS);
 define('CSS_DIR',FS . 'css' . FS);
 define('IMG_DIR',FS . 'img' . FS);
 define('JS_DIR',FS . 'js' . FS);

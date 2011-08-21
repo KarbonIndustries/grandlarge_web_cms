@@ -51,6 +51,9 @@ if(!$directors && !$mediaCategories)
 	<table id="feedList" border="0" cellspacing="0" cellpadding="2">
 	</table>
 </div>
+
+<div style="margin-bottom:100px"></div>
+
 <script type="text/javascript" charset="utf-8">
 	feeds.init();
 </script>

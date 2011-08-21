@@ -723,6 +723,64 @@ Q;
 
 	}
 
+	public static function updateNotable($info,$returnJSON = true)
+	{
+		if(is_array($info) && array_key_exists('id',$info) && array_key_exists('title',$info) && array_key_exists('url',$info))
+		{
+			$info['title'] = trim($info['title']);
+			$info['url']   = trim($info['url']);
+			$link          = self::openConnection();
+			$query         = <<<Q
+UPDATE IGNORE `news`
+SET `news`.`title` = '{$info['title']}',
+	`news`.`url` = '{$info['url']}'
+WHERE id = {$info['id']}
+Q;
+			self::queryDb($query);
+			if(!mysql_errno($link))
+			{
+				$data['success'] = true;
+				$data['msg']     = stripslashes($info['title']) . ' successfully updated.';
+				$data['htmlMsg'] = '<h1>' . $data['msg'] . '</h1>';
+				return $returnJSON ? json_encode($data) : true;
+			}
+		}
+
+		$errorData = array();
+		$errorData['success'] = false;
+		$errorData['msg'] = 'There was an error updating the specified item.';
+		$errorData['htmlMsg'] = '<h1>' . $errorData['msg'] . '</h1>';
+
+		return $returnJSON ? json_encode($errorData) : false;
+	}
+
+	public static function removeNotable($id,$returnJSON = true)
+	{
+		if($id)
+		{
+			$link          = self::openConnection();
+			$query         = <<<Q
+DELETE FROM `news`
+WHERE id = {$id}
+Q;
+			self::queryDb($query);
+			if(mysql_affected_rows($link))
+			{
+				$data['success'] = true;
+				$data['msg']     = stripslashes('Item successfully removed.');
+				$data['htmlMsg'] = '<h1>' . $data['msg'] . '</h1>';
+				return $returnJSON ? json_encode($data) : true;
+			}
+		}
+
+		$errorData = array();
+		$errorData['success'] = false;
+		$errorData['msg'] = 'There was an error removing the specified item.';
+		$errorData['htmlMsg'] = '<h1>' . $errorData['msg'] . '</h1>';
+
+		return $returnJSON ? json_encode($errorData) : false;
+	}
+
 	#====================================================================================
 	# DELETE METHODS
 	#====================================================================================

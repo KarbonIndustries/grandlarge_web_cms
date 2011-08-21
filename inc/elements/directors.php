@@ -38,6 +38,9 @@
 		<div id="updateBtnShell"><button id="updateDirectorBtn"></button></div>
 	</div>
 </div>
+
+<div style="margin-bottom:100px"></div>
+
 <script type="text/javascript" charset="utf-8">
 	directors.init();
 </script>
