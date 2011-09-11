@@ -245,6 +245,24 @@ Q;
 		return $returnJSON ? json_encode($result) : false;
 	}
 
+	public static function addNotable($title,$image,$url)
+	{
+		$link  = self::openConnection();
+		$title = self::mysqlClean($title);
+		$image = self::mysqlClean($image);
+		$url   = self::mysqlClean($url);
+		if(!$title || !$image || !$url)
+		{
+			die('Form is incomplete');
+		}
+		$query = <<<Q
+INSERT INTO `news` (`title`,`image`,`url`)
+VALUES('{$title}','{$image}','{$url}')
+Q;
+		self::queryDb($query);
+		return mysql_affected_rows() ? true : false;
+	}
+
 	#====================================================================================
 	# SELECT METHODS
 	#====================================================================================
@@ -725,7 +743,7 @@ Q;
 
 	public static function updateNotable($info,$returnJSON = true)
 	{
-		if(is_array($info) && array_key_exists('id',$info) && array_key_exists('title',$info) && array_key_exists('url',$info))
+		if(is_array($info) && array_key_exists('id',$info) && array_key_exists('title',$info) && array_key_exists('url',$info) && filter_var($info['url'],FILTER_VALIDATE_URL))
 		{
 			$info['title'] = trim($info['title']);
 			$info['url']   = trim($info['url']);
@@ -748,34 +766,7 @@ Q;
 
 		$errorData = array();
 		$errorData['success'] = false;
-		$errorData['msg'] = 'There was an error updating the specified item.';
-		$errorData['htmlMsg'] = '<h1>' . $errorData['msg'] . '</h1>';
-
-		return $returnJSON ? json_encode($errorData) : false;
-	}
-
-	public static function removeNotable($id,$returnJSON = true)
-	{
-		if($id)
-		{
-			$link          = self::openConnection();
-			$query         = <<<Q
-DELETE FROM `news`
-WHERE id = {$id}
-Q;
-			self::queryDb($query);
-			if(mysql_affected_rows($link))
-			{
-				$data['success'] = true;
-				$data['msg']     = stripslashes('Item successfully removed.');
-				$data['htmlMsg'] = '<h1>' . $data['msg'] . '</h1>';
-				return $returnJSON ? json_encode($data) : true;
-			}
-		}
-
-		$errorData = array();
-		$errorData['success'] = false;
-		$errorData['msg'] = 'There was an error removing the specified item.';
+		$errorData['msg'] = 'There was an error updating the specified item. Please make sure you provided a valid title and URL.';
 		$errorData['htmlMsg'] = '<h1>' . $errorData['msg'] . '</h1>';
 
 		return $returnJSON ? json_encode($errorData) : false;
@@ -940,6 +931,40 @@ Q;
 		$result['success'] = false;
 		$result['message'] = 'There was an error removing the feed.';
 		return $returnJSON ? json_encode($result) : false;
+	}
+
+	public static function removeNotable($info,$returnJSON = true)
+	{
+		$errorData = array();
+		$errorData['success'] = false;
+		$errorData['msg'] = 'There was an error removing the specified item.';
+		$errorData['htmlMsg'] = '<h1>' . $errorData['msg'] . '</h1>';
+
+		if($info['id'] && $info['fileName'])
+		{
+			$filePath = ROOT . $info['fileName'];
+			$file = new fImage($filePath);
+			$file->delete();
+			if(file_exists($filePath))
+			{
+				return $returnJSON ? json_encode($errorData) : false;
+			}
+			$link          = self::openConnection();
+			$query         = <<<Q
+DELETE FROM `news`
+WHERE id = {$info['id']}
+Q;
+			self::queryDb($query);
+			if(mysql_affected_rows($link))
+			{
+				$data['success'] = true;
+				$data['msg']     = stripslashes('Item successfully removed.');
+				$data['htmlMsg'] = '<h1>' . $data['msg'] . '</h1>';
+				return $returnJSON ? json_encode($data) : true;
+			}
+		}
+
+		return $returnJSON ? json_encode($errorData) : false;
 	}
 
 	#====================================================================================

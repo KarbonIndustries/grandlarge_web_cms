@@ -1,8 +1,12 @@
-// CONFIG
+/* ========== */
+/* = CONFIG = */
+/* ========== */
 var SCRIPT_DIR = '/../scripts/',
 	AJAX_FILE = SCRIPT_DIR + 'ajax.php';
 
-// OBJECTS
+/* =========== */
+/* = OBJECTS = */
+/* =========== */
 var directors = {},
 	feeds     = {},
 	notable   = {},
@@ -11,7 +15,9 @@ var directors = {},
 	users     = {},
 	files     = {};
 
-// NOBABLE
+/* =========== */
+/* = NOBABLE = */
+/* =========== */
 notable.init                            = function()
 {
 	var n               = this,
@@ -60,12 +66,14 @@ notable.addTableListeners               = function()
 
 	no.removeBtns.click(function()
 	{
-		var i = $(this),
-		title = i.parent().parent().find('td.titleCell').find('input[type=text]').val(),
-		id    = parseInt(i.attr('rowId'),10);
-		if(confirm('Are you sure you want to remove ' + title))
+		var i    = $(this),
+		root     = i.parent().parent();
+		title    = root.find('td.titleCell').find('input[type=text]').val(),
+		id       = parseInt(i.attr('rowId'),10),
+		fileName = root.find('td.imgCell').find('img').attr('src');
+		if(confirm('Are you sure you want to remove ' + title + '?'))
 		{
-			n.remove(id);
+			n.remove(id,fileName);
 		}
 	});
 
@@ -90,13 +98,16 @@ notable.update                          = function(title,url,id)
 	return n;
 };
 
-notable.remove                          = function(id)
+notable.remove                          = function(id,fileName)
 {
-	var n = this,
-	ne    = n.errors,
-	no    = n.objects;
+	var n           = this,
+	ne              = n.errors,
+	no              = n.objects
+	params          = {},
+	params.id       = id,
+	params.fileName = fileName;
 
-	$.get(AJAX_FILE,{callback:'removeNotable',params:id},function(data)
+	$.get(AJAX_FILE,{callback:'removeNotable',params:params},function(data)
 	{
 		if(data.success)
 		{
@@ -110,7 +121,9 @@ notable.remove                          = function(id)
 	return n;
 };
 
-// FEEDS
+/* ========= */
+/* = FEEDS = */
+/* ========= */
 feeds.init                              = function()
 {
 	var f            = this,
@@ -298,7 +311,9 @@ feeds.clearAddFeedInputs                = function()
 	fo.addFeedShell.find('[type="text"]#feedUrl').val('');
 };
 
-// DIRECTORS
+/* ============= */
+/* = DIRECTORS = */
+/* ============= */
 directors.init                          = function()
 {
 	var d                = this;
@@ -486,7 +501,9 @@ directors.clearEditDirectorFields       = function()
 	return d;
 };
 
-// CONTACT
+/* =========== */
+/* = CONTACT = */
+/* =========== */
 contact.init                            = function()
 {
 	var c              = this;
@@ -844,4 +861,4 @@ contact.resetEditOfficeFields           = function()
 
 
 
-//end
+// end

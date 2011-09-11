@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Pro SQL dump
-# Version 3389
+# Version 3402
 #
 # http://www.sequelpro.com/
 # http://code.google.com/p/sequel-pro/
 #
 # Host: 127.0.0.1 (MySQL 5.5.9)
 # Database: grandlarge
-# Generation Time: 2011-08-20 19:49:54 -0400
+# Generation Time: 2011-09-11 16:38:40 -0400
 # ************************************************************
 
 
@@ -273,7 +273,7 @@ DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(60) NOT NULL,
-  `image` varchar(32) NOT NULL,
+  `image` varchar(64) NOT NULL DEFAULT '',
   `desc` text NOT NULL,
   `url` varchar(2083) NOT NULL,
   `timeAdded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -286,21 +286,21 @@ LOCK TABLES `news` WRITE;
 
 INSERT INTO `news` (`id`, `title`, `image`, `desc`, `url`, `timeAdded`)
 VALUES
-	(1,'BUF','buf.jpg','BUF','http://www.robbersdog.co.nz','2011-01-10 13:01:09'),
-	(2,'Walkabout Films','walkabout.jpg','Walkabout Films','http://www.walkaboutfilms.comau.com','2011-01-10 12:02:15'),
-	(5,'Mac Guff','mac_guff.jpg','Mac Guff','http://www.macguff.com','2011-01-10 11:02:44'),
-	(4,'Animal Logic','animal_logic.jpg','Animal Logic','http://www.animallogic.com','2011-01-10 10:03:41'),
-	(3,'Robber\'s Dog','robbers_dog.jpg','Robbers Dog','http://www.robbersdog.co.nz','2011-01-10 09:03:44'),
-	(7,'Tom Kan Design','tom_kan.jpg','Tom Kan Design','http://www.tomkandesign.com','2011-01-10 08:05:00'),
-	(6,'Francesco Carrozzini','francesco_carrozzini.jpg','Francesco Carrozzini','http://www.francescocarrozzini.com','2011-01-10 07:06:03'),
-	(8,'Rockwood Music Hall','rockwood_music_hall.jpg','Rockwood Music Hall','http://www.rockwoodmusichall.com','2011-01-10 06:50:32'),
-	(9,'Cosmic','cosmic.jpg','Cosmic','http://www.cosmicparis.com/#/bruno_delbonnel','2011-01-10 06:40:04'),
-	(10,'Piffeteau','piffeteau.jpg','Piffeteau','http://www.piffeteau.com','2011-01-10 06:30:33'),
-	(11,'Kinou','kinou.jpg','Kinou','http://www.kinou.fr','2011-01-10 06:25:53'),
-	(12,'Nicolas Loir','nicolas_loir.jpg','Nicolas Loir','http://www.nicolasloir.com','2011-01-10 06:20:21'),
-	(13,'World Locations','world_locations.jpg','World Locations','http://www.worldlocations.com','2011-01-10 06:15:43'),
-	(14,'G2 Works','g2_works.jpg','G2 Works','http://www.g2works.com','2011-01-10 06:10:44'),
-	(15,'Franck Tymezuk','francky_tymezuk.jpg','Franck Tymezuk','http://www.francktymezuk.com','2011-01-10 06:06:06');
+	(1,'BUF','1315767245_bb0bed76d362b6ee3e1d987097c5ec57.jpg','BUF','http://www.robbersdog.co.nz','2011-01-10 13:01:09'),
+	(2,'Walkabout Films','1315767997_bd13946c8d01c3a4053b93b4f1f81674.jpg','Walkabout Films','http://www.walkaboutfilms.comau.com','2011-01-10 12:02:15'),
+	(5,'Mac Guff','1315767549_0968592979441ce9a30ca692ceef06a7.jpg','Mac Guff','http://www.macguff.com','2011-01-10 11:02:44'),
+	(4,'Animal Logic','1315767170_bd30b6f2989a1aadd2bd03a5480aa3fe.jpg','Animal Logic','http://www.animallogic.com','2011-01-10 10:03:41'),
+	(3,'Robber\'s Dog','1315767857_63b3795b30d462eb3fa354da9e1f210b.jpg','Robbers Dog','http://www.robbersdog.co.nz','2011-01-10 09:03:44'),
+	(7,'Tom Kan Design','1315767967_6282432516c9243984ed099bd3ceb888.jpg','Tom Kan Design','http://www.tomkandesign.com','2011-01-10 08:05:00'),
+	(6,'Francesco Carrozzini','1315767325_9b759336269b6c5a9f750edb781a2e1b.jpg','Francesco Carrozzini','http://www.francescocarrozzini.com','2011-01-10 07:06:03'),
+	(8,'Rockwood Music Hall','1315767903_eabc6ca62b20b98dab3114aac9a2dea9.jpg','Rockwood Music Hall','http://www.rockwoodmusichall.com','2011-01-10 06:50:32'),
+	(9,'Cosmic','1315767293_06e88dbea15d883b7d579e9d1b0594ed.jpg','Cosmic','http://www.cosmicparis.com/#/bruno_delbonnel','2011-01-10 06:40:04'),
+	(10,'Piffeteau','1315767820_2be22f12b49e46334dff8798f7bc9d88.jpg','Piffeteau','http://www.piffeteau.com','2011-01-10 06:30:33'),
+	(11,'Kinou','1315767515_693b18ff2211734bf50c6f28933e00d8.jpg','Kinou','http://www.kinou.fr','2011-01-10 06:25:53'),
+	(12,'Nicolas Loir','1315767580_0f4b70d1556cdfdbf20b69f2718b9467.jpg','Nicolas Loir','http://www.nicolasloir.com','2011-01-10 06:20:21'),
+	(13,'World Locations','1315768026_13931402ec9e9ef2e4dd5dc212f95087.jpg','World Locations','http://www.worldlocations.com','2011-01-10 06:15:43'),
+	(14,'G2 Works','1315767401_e2176e5a763fbc1c292eab283723de99.jpg','G2 Works','http://www.g2works.com','2011-01-10 06:10:44'),
+	(15,'Franck Tymezuk','1315767376_244950ae65b54f717ae13fecba03eddf.jpg','Franck Tymezuk','http://www.francktymezuk.com','2011-01-10 06:06:06');
 
 /*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;

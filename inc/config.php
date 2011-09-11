@@ -12,7 +12,7 @@ define('ELEMENT_DIR',ROOT . PD . 'inc' . DS . 'elements' . DS);
 define('FLOURISH_DIR',CLASS_DIR . 'flourish' . DS);
 
 #WEB DIRECTORIES
-define('WEB_STORAGE_DIR',FS . 'storage' . FS);
+define('WEB_STORAGE_DIR','storage' . FS);
 define('NOTABLE_DIR',WEB_STORAGE_DIR . 'notable' . FS);
 define('ABOUT_DIR',WEB_STORAGE_DIR . 'about' . FS);
 define('CSS_DIR',FS . 'css' . FS);

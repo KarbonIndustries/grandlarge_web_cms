@@ -2,6 +2,12 @@
 
 <?php
 $PAGE = $_SERVER['PHP_SELF'] . '?p=notable';
+$mimeTypes = array('image/jpeg','image/png','image/gif','image/pjpeg');
+$file = new fUpload();
+$file->setMimeTypes($mimeTypes,'The image must be jpg, png or gif');
+$file->setImageDimensions(188,100,188,100);
+$file->setMaxSize('30k');
+$file->enableOverwrite();
 ?>
 
 <!-- =============== -->
@@ -10,11 +16,51 @@ $PAGE = $_SERVER['PHP_SELF'] . '?p=notable';
 
 <div id="addNotableShell">
 	<h3>Add Notable</h3>
+	
+	<?php
+
+	if($_FILES && $_POST['notableTitle'] && filter_var($_POST['notableURL'],FILTER_VALIDATE_URL))
+	{
+		try
+		{
+			$img = $file->move(NOTABLE_DIR,'image');
+			$newName = time() . '_' . md5_file(NOTABLE_DIR . $img->getName()) . '.' . $img->getExtension();
+			$img->rename($newName,true);
+			if($img->getWidth() != 188 || $img->getHeight() != 100)
+			{
+				$img->resize(188,100,true);
+			}
+			$img->saveChanges();
+			$title = $_POST['notableTitle'];
+			$url   = $_POST['notableURL'];
+			if(GL::addNotable($title,$newName,$url))
+			{
+				echo '<p>' . $_POST['notableTitle'] . ' was successfully added.</p>';
+			}else
+			{
+				echo '<p>There was a problem saving the item. Please try again.</p>';
+			}
+			
+		}catch(fValidationException $e)
+		{
+			echo '<p>Please try again, making sure the image meets the requirements below.</p>';
+		}
+	}else
+	{
+		if($_POST)
+		{
+			echo '<p>Please choose a title, url and image.</p>';
+		}
+	}
+
+	?>
+	
+	<p style="font-size:11px;">Max file size: 30kb, Dimensions: 188px x 100px, Formats: jpg, png, gif</p>
 
 	<!-- upload form -->
 	<div id="">
 		<form name="" action="<?= $PAGE ?>" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
-			<input type="hidden" name="MAX_FILE_SIZE" value="30000">
+			<input type="hidden" name="MAX_FILE_SIZE" value="30000"/>
 			<div id="addNotableTextRow">
 				<input id="notableTitle" name="notableTitle" type="text" value="Title"/>
 				<input id="notableURL" name="notableURL" type="text" value="URL"/>
@@ -76,7 +122,6 @@ foreach ($_FILES["pictures"]["error"] as $key => $error) {
 
 
 <?php
-
 function addItem()
 {
 	$errors = array();
