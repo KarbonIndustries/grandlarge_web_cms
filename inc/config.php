@@ -15,6 +15,7 @@ define('FLOURISH_DIR',CLASS_DIR . 'flourish' . DS);
 define('WEB_STORAGE_DIR','storage' . FS);
 define('NOTABLE_DIR',WEB_STORAGE_DIR . 'notable' . FS);
 define('ABOUT_DIR',WEB_STORAGE_DIR . 'about' . FS);
+define('ABOUT_IMG_NAME','gl_about.jpg');
 define('CSS_DIR',FS . 'css' . FS);
 define('IMG_DIR',FS . 'img' . FS);
 define('JS_DIR',FS . 'js' . FS);
@@ -41,4 +42,8 @@ define('EMAIL_ABBR','E:');
 define('NL',"\n");
 define('EOL',PHP_EOL);
 define('EDIT_NOTABLE_IMG_WIDTH',100);
+define('NOTABLE_IMG_WIDTH',188);
+define('NOTABLE_IMG_HEIGHT',100);
+define('ABOUT_IMG_WIDTH',960);
+define('ABOUT_IMG_HEIGHT',214);
 ?>

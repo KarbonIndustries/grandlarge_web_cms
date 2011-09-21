@@ -522,6 +522,23 @@ HTML_DATA;
 		return $returnJSON ? json_encode($data) : false;
 	}
 
+	public static function getAbout($returnJSON = true)
+	{
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `about`
+LIMIT 1
+Q;
+
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			return mysql_fetch_assoc($result);
+		}
+
+		return false;
+	}
+
 	#====================================================================================
 	# UPDATE METHODS
 	#====================================================================================
@@ -770,6 +787,25 @@ Q;
 		$errorData['htmlMsg'] = '<h1>' . $errorData['msg'] . '</h1>';
 
 		return $returnJSON ? json_encode($errorData) : false;
+	}
+
+	public static function updateAbout($info,$returnJSON = true)
+	{
+		$link = self::openConnection();
+		$query = <<<Q
+UPDATE IGNORE `about`
+SET `about`.`image` = '{$info['image']}',
+	`about`.`col1`  = '{$info['col1']}',
+	`about`.`col2`  = '{$info['col2']}'
+LIMIT 1
+Q;
+
+		self::queryDb($query);
+		if(!mysql_errno($link))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	#====================================================================================

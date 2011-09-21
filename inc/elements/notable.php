@@ -5,7 +5,7 @@ $PAGE = $_SERVER['PHP_SELF'] . '?p=notable';
 $mimeTypes = array('image/jpeg','image/png','image/gif','image/pjpeg');
 $file = new fUpload();
 $file->setMimeTypes($mimeTypes,'The image must be jpg, png or gif');
-$file->setImageDimensions(188,100,188,100);
+$file->setImageDimensions(NOTABLE_IMG_WIDTH,NOTABLE_IMG_HEIGHT,NOTABLE_IMG_WIDTH,NOTABLE_IMG_HEIGHT);
 $file->setMaxSize('30k');
 $file->enableOverwrite();
 ?>
@@ -26,9 +26,9 @@ $file->enableOverwrite();
 			$img = $file->move(NOTABLE_DIR,'image');
 			$newName = time() . '_' . md5_file(NOTABLE_DIR . $img->getName()) . '.' . $img->getExtension();
 			$img->rename($newName,true);
-			if($img->getWidth() != 188 || $img->getHeight() != 100)
+			if($img->getWidth() != NOTABLE_IMG_WIDTH || $img->getHeight() != NOTABLE_IMG_HEIGHT)
 			{
-				$img->resize(188,100,true);
+				$img->resize(NOTABLE_IMG_WIDTH,NOTABLE_IMG_HEIGHT,true);
 			}
 			$img->saveChanges();
 			$title = $_POST['notableTitle'];
@@ -55,7 +55,7 @@ $file->enableOverwrite();
 
 	?>
 	
-	<p style="font-size:11px;">Max file size: 30kb, Dimensions: 188px x 100px, Formats: jpg, png, gif</p>
+	<p style="font-size:11px;">Max file size: 30kb, Dimensions: <?=NOTABLE_IMG_WIDTH?>px x <?=NOTABLE_IMG_HEIGHT?>px, Formats: jpg, png, gif</p>
 
 	<!-- upload form -->
 	<div id="">
@@ -67,7 +67,7 @@ $file->enableOverwrite();
 			</div>
 			<div id="addNotableButtonRow">
 				<input id="image" name="image" type="file"/>
-				<input type="submit" value="Upload"></input>
+				<input type="submit" value="Submit"></input>
 			</div>
 		</form>
 	</div>

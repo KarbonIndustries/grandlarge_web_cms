@@ -72,7 +72,7 @@ ul{list-style-type:none;padding:0;}
 	/* ========= */
 	/* = ABOUT = */
 	/* ========= */
-
+	#addAboutShell input[type="file"]{color:white;}
 
 	/* =========== */
 	/* = CONTACT = */
