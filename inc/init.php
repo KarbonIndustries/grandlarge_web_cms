@@ -6,11 +6,19 @@ require_once(INC_DIR . 'functions.php');
 
 function __autoload($class_name)
 {
-		$file1 = INC_DIR . $class_name . '.php';
-		$file2 = CLASS_DIR . $class_name . '.php';
-		$file3 = FLOURISH_DIR . $class_name . '.php';
+		$files[] = INC_DIR . $class_name . '.php';
+		$files[] = CLASS_DIR . $class_name . '.php';
+		$files[] = FLOURISH_DIR . $class_name . '.php';
 
-		if(file_exists($file1))
+		while($file = array_shift($files))
+		{
+			if(file_exists($file))
+			{
+				include($file);
+				return;
+			}
+		}
+/*		if(file_exists($file1))
 		{
 			include $file1;
 			return;
@@ -25,8 +33,10 @@ function __autoload($class_name)
 			include $file3;
 			return;
 		}
-
+*/
 		throw new Exception('The class ' . $class_name . ' could not be loaded');
 }
 
+#fSession::setPath(SESSION_DIR);
+#fSession::setLength(SESSION_LENGTH);
 ?>

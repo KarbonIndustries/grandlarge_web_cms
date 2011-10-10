@@ -5,6 +5,20 @@ button{cursor:pointer;}
 img{border:none;}
 ul{list-style-type:none;padding:0;}
 
+/* ========= */
+/* = LOGIN = */
+/* ========= */
+#loginShell{}
+	#loginTable{width:330px;margin:50px auto 0;border-spacing:0;background:#FFFFFF;color:#000000;}
+		#loginTable th#loginTitle{background:#65A7C0;padding:7px;font-size:16px;color:#FFFFFF;font-weight:bold;}
+		#loginTable th#loginErrorHead{padding:5px;background:#FF0000;color:#FFFFFF;}
+		#loginTable td div{padding:5px 5px 0 5px;}
+			#loginTable td div label{width:72px;display:block;float:left;}
+			#loginTable #usernameShell input,#loginTable #passwordShell input{width:242px;}
+			#loginTable #submitShell{padding-bottom:5px;}
+				#loginTable #submitShell{text-align:right;}
+
+
 #navShell{border-right:1px solid #65A7C0;position:fixed;top:0;bottom:0;z-index:2;width:200px;text-align:right;}
 	#navShell>div>h1{padding-right:15px;}
 	#nav>li{display:block;cursor:pointer;}
@@ -102,14 +116,25 @@ ul{list-style-type:none;padding:0;}
 		#editOffice #updateOfficeBtnShell{text-align:right;margin-top:10px;}
 		#editOffice #updateOfficeBtn{background:url('/img/sprites.png') no-repeat scroll 0 -56px transparent;border:none;width:100px;height:38px;}
 
-		/* ========= */
-		/* = USERS = */
-		/* ========= */
+	/* ========= */
+	/* = USERS = */
+	/* ========= */
+	#addUserShell{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #303030;}
+		#addUserShell span.addUserBlurb{font-size:11px;}
+		#addUserShell #addUserFieldsShell{width:366px;}
+		#addUserShell #addUserFieldsShell>div{padding-bottom:5px;}
+			#addUserShell #addUserFieldsShell label{width:130px;display:block;float:left;text-align:right;padding-right:10px;}
+			#addUserShell #addUserFieldsShell input{width:218px;}
+		#addUserShell #addUserFieldsShell #userTypeShell{}
+			#addUserShell #addUserFieldsShell #userTypeShell select{}
+		#addUserShell #addUserFieldsShell #addButtonShell{text-align:right;}
+	#userListTable{width:800px;}
+	#userListTable td{padding:5px;}
 
 
-		/* ========= */
-		/* = FILES = */
-		/* ========= */
+	/* ========= */
+	/* = FILES = */
+	/* ========= */
 
 .hidden{display:none;}
 tr.altRow{background:#141414;}

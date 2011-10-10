@@ -26,17 +26,35 @@ define('SWF_DIR',FS . 'swf' . FS);
 define('SHORT_COMPANY_NAME','Grand Large');
 define('LONG_COMPANY_NAME',SHORT_COMPANY_NAME . ' Inc.');
 define('COMPANY_BASE_URL','http://www.grandlargeinc.com/');
+define('COMPANY_PRETTY_URL','grandlargeinc.com');
 define('ARCHITECT','Karbon Interaktiv Inc.');
 define('ARCHITECT_URL','http://www.karbonnyc.com/');
+define('ARCHITECT_EMAIL','shammel@karbonnyc.com');
 
 #DEFAULTS
-define('DEFAULT_PAGE','directors');
-define('LOGIN_PAGE','login.php');
+define('LOGIN_PAGE','/');
 
 #ABBREVIATIONS
 define('PHONE_ABBR','T:');
 define('WEB_ABBR','W:');
 define('EMAIL_ABBR','E:');
+
+#SESSION
+define('USER_LOGIN_ID','userLoginId');
+define('USER_TYPE_ID','userTypeId');
+define('USERNAME','username');
+define('USER_TYPE_PRIVILEGES','userTypePrivileges');
+define('USER_PRIVILEGES','userPrivileges');
+define('MIN_USERNAME_LENGTH',6);
+define('MIN_PASSWORD_LENGTH',6);
+
+#PRIVILEGES
+define('PRIVILEGE_FILE',INC_DIR . 'privileges.php');
+define('USER_SELF_ID',3);
+define('ADD_USER_ID',0);
+define('EDIT_USER_TYPE_ID',1);
+define('EDIT_USER_PASSWORD_ID',2);
+define('REMOVE_USER_ID',3);
 
 #MISC
 define('NL',"\n");
@@ -46,4 +64,7 @@ define('NOTABLE_IMG_WIDTH',188);
 define('NOTABLE_IMG_HEIGHT',100);
 define('ABOUT_IMG_WIDTH',960);
 define('ABOUT_IMG_HEIGHT',214);
+
+#REGEX
+define('USERNAME_RULE','/^[A-z0-9_]{' . MIN_USERNAME_LENGTH . ',}$/');
 ?>

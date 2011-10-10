@@ -164,7 +164,7 @@
 	</div>
 </div>
 
-<div style="margin-bottom:100px"></div>
+<div style="margin-bottom:100px;float:left;clear:both;"></div>
 
 <script type="text/javascript" charset="utf-8">
 	contact.init();

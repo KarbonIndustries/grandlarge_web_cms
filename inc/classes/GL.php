@@ -2,10 +2,12 @@
 
 class GL
 {
-	private static $link			= NULL;
-	private static $alt				= false;
-	private static $pages			= array('directors','feeds','notable','about','contact','users','files');
-
+	private static $link            = NULL;
+	private static $alt             = false;
+	private static $PAGES1          = array('files');
+	private static $PAGES2          = array('directors','feeds','notable','about','contact','users','files');
+	private static $PAGES3          = array('directors','feeds','notable','about','contact','users','files');
+	private static $USER_TYPES      = array('1' => 'Client','2' => 'Admin','3' => 'Architect');
 
 	#====================================================================================
 	# INSERT METHODS
@@ -261,6 +263,77 @@ VALUES('{$title}','{$image}','{$url}')
 Q;
 		self::queryDb($query);
 		return mysql_affected_rows() ? true : false;
+	}
+
+	public static function addUser($info,$returnJSON = true)
+	{
+		if(!isset(
+			$info['userId'],
+			$info['userTypeId'],
+			$info['username'],
+			$info['password'],
+			$info['confirmPassword']))
+		{
+			$json['success'] = false;
+			$json['msg']   = 'Information provided is incomplete.';
+			return $returnJSON ? json_encode($json) : fasle;
+		}
+
+		$info['username'] = trim($info['username']);
+		$info['password'] = trim($info['password']);
+		$info['actionId'] = ADD_USER_ID;
+
+		if($info['password'] !== $info['confirmPassword'])
+		{
+			$json['success'] = false;
+			$json['msg']     = 'Passwords do not match. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		if(!self::userCanPerformAction($info))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'You do not have permission to add ' . $info['username'];
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		if(!self::isValidUsername($info['username']))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'Username is insufficient. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		if(!(strlen($info['password']) >= MIN_PASSWORD_LENGTH))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'Password is too short. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		if(!self::usernameIsAvailable($info['username']))
+		{
+			$json['success'] = false;
+			$json['msg']     = $info['username'] . ' is already taken. Please try again';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$link = self::openConnection();
+		$query = <<<Q
+INSERT INTO `users` (`userTypeId`,`username`,`password`)
+VALUES({$info['userTypeId']},'{$info['username']}',SHA1('{$info['password']}'))
+Q;
+		self::queryDb($query);
+		if(!mysql_affected_rows() === 1)
+		{
+			$json['success'] = false;
+			$json['msg']     = 'There was an error adding ' . $info['username'] . '. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$json['success'] = true;
+		$json['msg']     = $info['username'] . ' was successfully added.';
+		return $returnJSON ? json_encode($json) : true;
 	}
 
 	#====================================================================================
@@ -539,6 +612,70 @@ Q;
 		return false;
 	}
 
+	public static function getUsers($returnJSON = true)
+	{
+		$username   = fSession::get(USERNAME);
+		$userTypeId = $userTypeIdCounter = fSession::get(USER_TYPE_ID);
+		$query = <<<Q
+SELECT * FROM `users`
+WHERE `users`.`userTypeId` <= {$userTypeId}
+ORDER BY `users`.`userTypeId` DESC, `users`.`username` ASC
+Q;
+		$link = self::openConnection();
+		$result = self::queryDb($query);
+
+		if(mysql_num_rows($result))
+		{
+			$data['success'] = true;
+			$data['html']    = '<table id="userListTable" cellpadding="0" cellspacing="0" border="0">';
+			while($row = mysql_fetch_assoc($result))
+			{
+				$users[] = $row;
+				$select = '<select type="userType" userId="' . $row['id'] . '">';
+				$val = 0;
+				while(++$val <= $userTypeId)
+				{
+					$select .= '<option value="' . $val . '" ' . ($row['userTypeId'] == $val ? 'selected' : '') . ' >' . self::$USER_TYPES["$val"] . '</option>';
+				}
+				$select .= '</select>';
+
+				if($returnJSON)
+				{
+					$data['html'] .= '<tr class="' . self::altStr('altRow') . '"><td>' . $row['username'] . '</td><td>' . $select . '</td><td><button type="changePassword" userId="' . $row['id'] . '" userTypeId="' . $row['userTypeId'] . '">change password</button></td><td><button type="removeUser" userId="' . $row['id'] . '" userTypeId="' . $row['userTypeId'] . '">remove</button></td></tr>';
+				}
+			}
+			$data['html'] .= '</table>';
+			self::resetAlt();
+			return $returnJSON ? json_encode($data) : $users;
+		}
+
+		if(mysql_num_rows($result) == 0 && !mysql_errno($link))
+		{
+			$data['success'] = true;
+			$data['html']    = '<p>There are no users.</p>';
+			return $returnJSON ? json_encode($data) : false;
+		}
+	}
+
+	public static function getUser($id,$returnJSON = true)
+	{
+	}
+
+	private static function usernameIsAvailable($username,$returnJSON = false)
+	{
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `users`
+WHERE `users`.`username` = '{$username}'
+Q;
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result) == 0 && !mysql_errno($link))
+		{
+			return true;
+		}
+		return false;
+	}
+
 	#====================================================================================
 	# UPDATE METHODS
 	#====================================================================================
@@ -808,6 +945,88 @@ Q;
 		return false;
 	}
 
+	public static function updateUserType($info,$returnJSON = true)
+	{
+		if(!isset(
+			$info['userId'],
+			$info['userTypeId']))
+		{
+			$json['success'] = false;
+			$json['msg']   = 'Information provided is incomplete.';
+			return $returnJSON ? json_encode($json) : fasle;
+		}
+
+		$info['actionId'] = EDIT_USER_TYPE_ID;
+
+		if(!self::userCanPerformAction($info))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'You do not have permission to update the user type for this user.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$link = self::openConnection();
+		$query = <<<Q
+UPDATE `users`
+SET `users`.`userTypeId` = {$info['userTypeId']}
+WHERE `users`.`id` = {$info['userId']}
+LIMIT 1
+Q;
+		self::queryDb($query);
+		if(!mysql_affected_rows() === 1 || mysql_errno($link))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'There was an error updating the user type for this user. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$json['success'] = true;
+		$json['msg']     = 'User type was successfully updated.';
+		return $returnJSON ? json_encode($json) : true;
+	}
+
+	public static function updatePassword($info,$returnJSON = true)
+	{
+		if(!isset(
+			$info['userId'],
+			$info['userTypeId'],
+			$info['password'],
+			$info['confirmPassword']))
+		{
+			$json['success'] = false;
+			$json['msg']   = 'Information provided is incomplete.';
+			return $returnJSON ? json_encode($json) : fasle;
+		}
+
+		$info['actionId'] = EDIT_USER_PASSWORD_ID;
+
+		if(!self::userCanPerformAction($info))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'You do not have permission to update the password for this user.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$link = self::openConnection();
+		$query = <<<Q
+UPDATE IGNORE `users`
+SET `users`.`password` = SHA1('{$info['userTypeId']}')
+WHERE `users`.`id` = {$info['userId']}
+LIMIT 1
+Q;
+		self::queryDb($query);
+		if(!mysql_affected_rows() === 1 || mysql_errno($link))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'There was an error updating the password for this user. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$json['success'] = true;
+		$json['msg']     = 'Password was successfully updated.';
+		return $returnJSON ? json_encode($json) : true;
+	}
+
 	#====================================================================================
 	# DELETE METHODS
 	#====================================================================================
@@ -1003,10 +1222,54 @@ Q;
 		return $returnJSON ? json_encode($errorData) : false;
 	}
 
+	public static function removeUser($info,$returnJSON = true)
+	{
+		if(!isset(
+			$info['userId'],
+			$info['userTypeId']))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'Information provided is incomplete.';
+			return $returnJSON ? json_encode($json) : fasle;
+		}
+
+		$info['actionId'] = REMOVE_USER_ID;
+
+		if(!self::userCanPerformAction($info))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'You do not have permission to remove this user.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$link = self::openConnection();
+		$query = <<<Q
+DELETE FROM `users`
+WHERE `users`.`id` = {$info['userId']}
+LIMIT 1
+Q;
+		self::queryDb($query);
+		if(!mysql_affected_rows() === 1 || mysql_errno($link))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'There was an error removing the user. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		$userLoginId = fSession::get(USER_LOGIN_ID);
+		$self        = (int) $info['userId'] === $userLoginId;
+
+		$json['success']     = true;
+		$json['msg']         = 'User was successfully removed.';
+		$json['removedSelf'] = $self;
+		$self ? fSession::destroy() : void;
+		return $returnJSON ? json_encode($json) : true;
+	}
+
 	#====================================================================================
 	# GENERAL METHODS
 	#====================================================================================
-	public static function redirectTo($url = NULL)
+	public static function redirectTo($url = null)
 	{
 		if(isset($url))
 		{
@@ -1027,9 +1290,9 @@ Q;
 		self::$alt = false;
 	}
 
-	public static function getPages()
+	private static function isValidUsername($username,$returnJSON = false)
 	{
-		return self::$pages;
+		return (bool) preg_match(USERNAME_RULE,(string) $username);
 	}
 
 	#====================================================================================
@@ -1053,7 +1316,7 @@ Q;
 		}
 	}
 
-	public static function mysqlClean($value)
+	private static function mysqlClean($value)
 	{
 		$value = trim($value);
 		$magicQuotesOn = get_magic_quotes_gpc();
@@ -1091,29 +1354,96 @@ Q;
 	}
 
 	#====================================================================================
+	# PRIVILEGE METHODS
+	#====================================================================================
+	
+	public static function getUserTypePrivileges()
+	{
+		return fSession::get(USER_TYPE_PRIVILEGES,false);
+	}
+
+	public static function userCanPerformAction($info,$returnJSON = false)
+	{
+		if(isset($info['userId'],$info['userTypeId'],$info['actionId']))
+		{
+			$userPrivileges  = fSession::get(USER_PRIVILEGES);
+			$userLoginId     = fSession::get(USER_LOGIN_ID);
+			$userTypeId      = fSession::get(USER_TYPE_ID);
+			$self            = (int) $info['userId'] === $userLoginId;
+			$userGroup       = $self ? USER_SELF_ID : ((int) $info['userTypeId']) - 1;
+			return (bool) $userPrivileges["$userTypeId"][$userGroup][$info['actionId']];
+		}
+		return false;
+	}
+
+	public static function getPagesForUserType($id)
+	{
+		$pageSet = 'PAGES' . $id;
+		return self::$$pageSet;
+	}
+
+	public static function userTypeIsArchitect($userTypeId)
+	{
+		return (int) $userTypeId === 3;
+	}
+
+	public static function usernameIsArchitect($username)
+	{
+		return $username == ARCHITECT_EMAIL;
+	}
+
+	#====================================================================================
 	# SESSION METHODS
 	#====================================================================================
+	public static function login($u,$p)
+	{
+		$u = trim($u);
+		$p = sha1(trim($p));
+
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `users`
+WHERE `users`.`username` = '{$u}'
+AND `users`.`password` = '{$p}'
+LIMIT 1
+Q;
+
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result) == 1)
+		{
+			$row = mysql_fetch_assoc($result);
+			fSession::set(USER_LOGIN_ID,(int) $row['id']);
+			fSession::set(USER_TYPE_ID,(int) $row['userTypeId']);
+			fSession::set(USERNAME,$row['username']);
+			fSession::set(USER_TYPE_PRIVILEGES,array_slice(self::$USER_TYPES,0,$row['userTypeId'],true));
+			fSession::set(USER_PRIVILEGES,unserialize(require(PRIVILEGE_FILE)));
+			return (int) $row['id'];
+		}
+		return false;
+	}
+
 	public static function startSession()
 	{
-		session_start();
+		fSession::open();
 	}
 
 	public static function isLoggedIn()
 	{
-		return isset($_SESSION['user']);
+		return fSession::get(USER_LOGIN_ID,false) ? true : false;
 	}
 
-	public static function confirmLoggedIn()
+	public static function confirmLoggedIn($url = null)
 	{
-		if(!self::isLoggedIn())
+		if(!$username = fSession::get(USERNAME,false))
 		{
-			redirectTo(LOGIN_PAGE);
+			self::logout($url);
 		}
 	}
 
-	public static function logout()
+	public static function logout($url = null)
 	{
-		
+		fSession::destroy();
+		self::redirectTo($url ? $url : LOGIN_PAGE);
 	}
 
 }

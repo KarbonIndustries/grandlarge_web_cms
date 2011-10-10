@@ -15,6 +15,152 @@ var directors = {},
 	users     = {},
 	files     = {};
 
+/* ========= */
+/* = USERS = */
+/* ========= */
+users.init                              = function()
+{
+	var u = this;
+	u.addAddUserListener().get();
+};
+
+users.get                               = function()
+{
+	var u = this,
+	ne    = u.errors,
+	no    = u.objects;
+
+	$.get(AJAX_FILE,{callback:'getUsers'},function(data)
+	{
+		if(data.success)
+		{
+			$('#userListShell').html(data.html);
+			u.addEditUserListeners();
+		}
+	},'json');
+
+	return u;
+};
+
+users.addAddUserListener                = function()
+{
+	var u = this;
+
+	$('#addUserShell').find('#addUserFieldsShell').find('#addButtonShell').find('button#addUser').click(function()
+	{
+		var params                 = {},
+			usernameField          = $('div#addUserShell').find('div#usernameShell').find('input#username'),
+			passwordField          = $('div#addUserShell').find('div#passwordShell').find('input#password'),
+			confirmPasswordField   = $('div#addUserShell').find('div#confirmPasswordShell').find('input#confirmPassword'),
+			userTypeField          = $('div#addUserShell').find('div#userTypeShell').find('select#userType');
+			params.username        = usernameField.val(),
+			params.password        = passwordField.val(),
+			params.confirmPassword = confirmPasswordField.val(),
+			params.userTypeId      = parseInt(userTypeField.val(),10),
+			params.userId          = 0;
+
+		if(params.password === params.confirmPassword)
+		{
+			$.get(AJAX_FILE,{callback:'addUser',params:params},function(data)
+			{
+				if(data.success)
+				{
+					u.get();
+					usernameField.val(''),
+					passwordField.val(''),
+					confirmPasswordField.val(''),
+					userTypeField.val(1);
+				}else
+				{
+					alert(data.msg);
+				}
+			},'json');
+		}else
+		{
+			alert('Passwords do not match. Please try again');
+		}
+	});
+
+	return u;
+}
+
+users.addEditUserListeners              = function()
+{
+	var u         = this,
+	userListTable = $('table#userListTable');
+
+	// CHANGE USER TYPE
+	userListTable.find('select[type=userType]').change(function()
+	{
+		var params                 = {};
+			params.userTypeId      = parseInt($(this).val(),10),
+			params.userId          = parseInt($(this).attr('userId'),10);
+		
+		$.get(AJAX_FILE,{callback:'updateUserType',params:params},function(data)
+		{
+			if(data.success)
+			{
+				u.get();
+			}else
+			{
+				alert(data.msg);
+			}
+		},'json');
+	});
+
+	// CHANGE USER PASSWORD
+	userListTable.find('button[type=changePassword]').click(function()
+	{
+		return;
+		var params                 = {};
+			params.password        = '',
+			params.confirmPassword = '',
+			params.userTypeId      = parseInt($(this).attr('userTypeId'),10),
+			params.userId          = parseInt($(this).attr('userId'),10);
+
+		if(params.password === params.confirmPassword)
+		{
+			$.get(AJAX_FILE,{callback:'addUser',params:params},function(data)
+			{
+				alert(data.msg);
+			},'json');
+		}else
+		{
+			alert('Passwords do not match. Please try again');
+		}
+	});
+
+	// REMOVE USER
+	userListTable.find('button[type=removeUser]').click(function()
+	{
+		var params                 = {};
+			params.userTypeId      = parseInt($(this).attr('userTypeId'),10),
+			params.userId          = parseInt($(this).attr('userId'),10);
+
+		if(confirm('Are you sure you want to remove this user?'))
+		{
+			$.get(AJAX_FILE,{callback:'removeUser',params:params},function(data)
+			{
+				if(data.success)
+				{
+					if(data.removedSelf)
+					{
+						window.location.reload();
+					}else
+					{
+						u.get();
+					}
+				}else
+				{
+					alert(data.msg);
+				}
+			},'json');
+		}
+	});
+
+	return u;
+};
+
 /* =========== */
 /* = NOBABLE = */
 /* =========== */
@@ -86,8 +232,8 @@ notable.update                          = function(title,url,id)
 	ne           = n.errors,
 	no           = n.objects,
 	params       = {};
-	params.title = title;
-	params.url   = url;
+	params.title = title,
+	params.url   = url,
 	params.id    = id;
 
 	$.get(AJAX_FILE,{callback:'updateNotable',params:params},function(data)
