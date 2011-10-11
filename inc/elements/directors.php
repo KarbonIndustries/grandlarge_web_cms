@@ -41,6 +41,10 @@
 
 <div style="margin-bottom:100px"></div>
 
-<script type="text/javascript" charset="utf-8">
-	directors.init();
-</script>
+<?php
+define('PAGE_SCRIPT',
+<<<SCRIPT
+directors.init();
+SCRIPT
+);
+?>

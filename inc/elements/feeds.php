@@ -54,6 +54,10 @@ if(!$directors && !$mediaCategories)
 
 <div style="margin-bottom:100px"></div>
 
-<script type="text/javascript" charset="utf-8">
-	feeds.init();
-</script>
+<?php
+define('PAGE_SCRIPT',
+<<<SCRIPT
+feeds.init();
+SCRIPT
+);
+?>

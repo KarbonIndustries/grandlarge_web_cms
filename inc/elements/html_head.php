@@ -4,7 +4,6 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 	<title><?= LONG_COMPANY_NAME ?></title>
 	<link rel="stylesheet" href="<?= CSS_DIR . 'styles.css' ?>" type="text/css" charset="utf-8"/>
-	<script src="<?= JS_DIR . 'jquery_1.5.2.min.js' ?>" type="text/javascript" charset="utf-8"></script>
-	<script src="<?= JS_DIR . 'gl_cms.js' ?>" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="<?= CSS_DIR . 'jquery/jquery_ui_1.8.16.custom.css' ?>" type="text/css" charset="utf-8"/>
 </head>
 <body>

@@ -300,14 +300,14 @@ Q;
 		if(!self::isValidUsername($info['username']))
 		{
 			$json['success'] = false;
-			$json['msg']     = 'Username is insufficient. Please try again.';
+			$json['msg']     = 'Username is insufficient. Please make sure the username contains only letters, numbers, and/or underscores and is between ' . MIN_USERNAME_LENGTH . ' and ' . MAX_USERNAME_LENGTH . ' characters';
 			return $returnJSON ? json_encode($json) : false;
 		}
 
-		if(!(strlen($info['password']) >= MIN_PASSWORD_LENGTH))
+		if(!(strlen($info['password']) >= MIN_PASSWORD_LENGTH) || !(strlen($info['password']) <= MAX_PASSWORD_LENGTH))
 		{
 			$json['success'] = false;
-			$json['msg']     = 'Password is too short. Please try again.';
+			$json['msg']     = 'Password is must be between ' . MIN_PASSWORD_LENGTH . ' and ' . MAX_PASSWORD_LENGTH . ' characters. Please try again.';
 			return $returnJSON ? json_encode($json) : false;
 		}
 
@@ -973,7 +973,7 @@ WHERE `users`.`id` = {$info['userId']}
 LIMIT 1
 Q;
 		self::queryDb($query);
-		if(!mysql_affected_rows() === 1 || mysql_errno($link))
+		if(mysql_errno($link))
 		{
 			$json['success'] = false;
 			$json['msg']     = 'There was an error updating the user type for this user. Please try again.';
@@ -1000,6 +1000,20 @@ Q;
 
 		$info['actionId'] = EDIT_USER_PASSWORD_ID;
 
+		if($info['password'] !== $info['confirmPassword'])
+		{
+			$json['success'] = false;
+			$json['msg']     = 'Passwords do not match. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
+		if(!(strlen($info['password']) >= MIN_PASSWORD_LENGTH) || !(strlen($info['password']) <= MAX_PASSWORD_LENGTH))
+		{
+			$json['success'] = false;
+			$json['msg']     = 'Password is must be between ' . MIN_PASSWORD_LENGTH . ' and ' . MAX_PASSWORD_LENGTH . ' characters. Please try again.';
+			return $returnJSON ? json_encode($json) : false;
+		}
+
 		if(!self::userCanPerformAction($info))
 		{
 			$json['success'] = false;
@@ -1010,12 +1024,12 @@ Q;
 		$link = self::openConnection();
 		$query = <<<Q
 UPDATE IGNORE `users`
-SET `users`.`password` = SHA1('{$info['userTypeId']}')
+SET `users`.`password` = SHA1('{$info['password']}')
 WHERE `users`.`id` = {$info['userId']}
 LIMIT 1
 Q;
 		self::queryDb($query);
-		if(!mysql_affected_rows() === 1 || mysql_errno($link))
+		if(mysql_errno($link))
 		{
 			$json['success'] = false;
 			$json['msg']     = 'There was an error updating the password for this user. Please try again.';
@@ -1262,7 +1276,7 @@ Q;
 		$json['success']     = true;
 		$json['msg']         = 'User was successfully removed.';
 		$json['removedSelf'] = $self;
-		$self ? fSession::destroy() : void;
+		$self ? fSession::destroy() : null;
 		return $returnJSON ? json_encode($json) : true;
 	}
 
@@ -1403,7 +1417,7 @@ Q;
 		$link = self::openConnection();
 		$query = <<<Q
 SELECT * FROM `users`
-WHERE `users`.`username` = '{$u}'
+WHERE `users`.`username` = BINARY '{$u}'
 AND `users`.`password` = '{$p}'
 LIMIT 1
 Q;

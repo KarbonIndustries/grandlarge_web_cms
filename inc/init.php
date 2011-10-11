@@ -2,7 +2,7 @@
 #error_reporting(0);
 require_once($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'config.php');
 require_once(INC_DIR . 'db.php');
-require_once(INC_DIR . 'functions.php');
+#require_once(INC_DIR . 'functions.php');
 
 function __autoload($class_name)
 {
@@ -18,25 +18,9 @@ function __autoload($class_name)
 				return;
 			}
 		}
-/*		if(file_exists($file1))
-		{
-			include $file1;
-			return;
-		}
-		if(file_exists($file2))
-		{
-			include $file2;
-			return;
-		}
-		if(file_exists($file3))
-		{
-			include $file3;
-			return;
-		}
-*/
 		throw new Exception('The class ' . $class_name . ' could not be loaded');
 }
 
-#fSession::setPath(SESSION_DIR);
-#fSession::setLength(SESSION_LENGTH);
+fSession::setPath(SESSION_DIR);
+fSession::setLength(SESSION_LENGTH);
 ?>

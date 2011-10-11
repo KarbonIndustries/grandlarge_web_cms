@@ -1,5 +1,7 @@
 db/
+inc/classes/flourish/
 inc/db.php
+public/css/jquery/
 public/js/jquery*
 public/storage/
-inc/classes/flourish/
+sessions/

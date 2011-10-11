@@ -166,6 +166,10 @@
 
 <div style="margin-bottom:100px;float:left;clear:both;"></div>
 
-<script type="text/javascript" charset="utf-8">
-	contact.init();
-</script>
+<?php
+define('PAGE_SCRIPT',
+<<<SCRIPT
+contact.init();
+SCRIPT
+);
+?>

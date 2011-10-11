@@ -22,6 +22,61 @@ users.init                              = function()
 {
 	var u = this;
 	u.addAddUserListener().get();
+	u.d = $('#passwordDialog');
+	u.e = u.d.find('#passwordDialogError');
+	u.d.dialog(
+	{
+		autoOpen:false,
+		title:"Change Password",
+		width:350,
+		modal:true,
+		draggable:false,
+		resizable:false,
+		buttons:
+		{
+			"Cancel":function()
+			{
+				$(this).dialog("close");
+			},
+			"Update":function()
+			{
+				var params                 = {};
+					params.password        = $(this).find('input#dialogPassword').val(),
+					params.confirmPassword = $(this).find('input#dialogConfirmPassword').val(),
+					params.userTypeId      = u.changePasswordInfo.userTypeId;
+					params.userId          = u.changePasswordInfo.userId;
+
+				if(params.password === params.confirmPassword)
+				{
+					$.get(AJAX_FILE,{callback:'updatePassword',params:params},function(data)
+					{
+						if(data.success)
+						{
+							u.d.dialog("close");
+						}else
+						{
+							u.showError(data.msg);
+						}
+					},'json');
+				}else
+				{
+					u.showError('Passwords do not match. Please try again.');
+				}
+			}
+		},
+		open:function(event,ui)
+		{
+			u.e.html('&nbsp;');
+			u.hideError();
+			$(this).find('input').val('');
+		},
+		close:function(event,ui)
+		{
+			u.e.html('&nbsp;');
+			u.hideError();
+			$(this).find('input').val('');
+		}
+	});
 };
 
 users.get                               = function()
@@ -77,7 +132,7 @@ users.addAddUserListener                = function()
 			},'json');
 		}else
 		{
-			alert('Passwords do not match. Please try again');
+			alert('Passwords do not match. Please try again.');
 		}
 	});
 
@@ -111,23 +166,11 @@ users.addEditUserListeners              = function()
 	// CHANGE USER PASSWORD
 	userListTable.find('button[type=changePassword]').click(function()
 	{
-		return;
-		var params                 = {};
-			params.password        = '',
-			params.confirmPassword = '',
-			params.userTypeId      = parseInt($(this).attr('userTypeId'),10),
-			params.userId          = parseInt($(this).attr('userId'),10);
+		var userTypeId      = parseInt($(this).attr('userTypeId'),10),
+			userId          = parseInt($(this).attr('userId'),10);
+			u.changePasswordInfo = {userId:userId,userTypeId:userTypeId};
 
-		if(params.password === params.confirmPassword)
-		{
-			$.get(AJAX_FILE,{callback:'addUser',params:params},function(data)
-			{
-				alert(data.msg);
-			},'json');
-		}else
-		{
-			alert('Passwords do not match. Please try again');
-		}
+		u.d.dialog('open');
 	});
 
 	// REMOVE USER
@@ -158,6 +201,21 @@ users.addEditUserListeners              = function()
 		}
 	});
 
+	return u;
+};
+
+users.showError                         = function(errorMsg)
+{
+	var u = this;
+	u.e.html(errorMsg);
+	u.e.removeClass('invisible');
+	return u;
+};
+
+users.hideError                         = function()
+{
+	var u = this;
+	u.e.addClass('invisible')
 	return u;
 };
 

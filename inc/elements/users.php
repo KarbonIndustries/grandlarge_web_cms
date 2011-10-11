@@ -1,13 +1,7 @@
 <h1>Users</h1>
-<?php
-#var_dump(fSession::get(USER_PRIVILEGES));
-$a = array('userId' => 2,'userTypeId' => 2,'actionId' => 0);
-#var_dump(GL::userCanPerformAction($a));
-#var_dump(fSession::get(USER_PRIVILEGES));
-#echo fSession::get(USER_LOGIN_ID);
-?>
+
 <div id="addUserShell">
-	<h3>Add User <span class="addUserBlurb">(<?= MIN_USERNAME_LENGTH ?> character minimum username, <?= MIN_PASSWORD_LENGTH ?> character minimun password)</span></h3>
+	<h3>Add User <span class="addUserBlurb">(<?= MIN_USERNAME_LENGTH . ' - ' . MAX_USERNAME_LENGTH ?> character username, <?= MIN_PASSWORD_LENGTH . ' - ' . MAX_PASSWORD_LENGTH ?> character password)</span></h3>
 	<div id="addUserFieldsShell">
 		<div id="usernameShell">
 			<label for="username">Username</label>
@@ -44,6 +38,26 @@ $a = array('userId' => 2,'userTypeId' => 2,'actionId' => 0);
 	<div id="userListShell"></div>
 </div>
 
-<script type="text/javascript" charset="utf-8">
-	users.init();
-</script>
+<!-- =================== -->
+<!-- = PASSWORD DIALOG = -->
+<!-- =================== -->
+<div id="passwordDialog">
+	<div id="passwordDialogError" class="invisible"></div>
+
+	<div id="dialogPasswordShell">
+		<label for="dialogPassword">Password</label>
+		<input type="password" name="dialogPassword" value="" id="dialogPassword">
+	</div>
+	<div id="dialogConfirmPasswordShell">
+		<label for="dialogConfirmPassword">Confirm Password</label>
+		<input type="password" name="dialogConfirmPassword" value="" id="dialogConfirmPassword">
+	</div>
+</div>
+
+<?php
+define('PAGE_SCRIPT',
+<<<SCRIPT
+users.init();
+SCRIPT
+);
+?>

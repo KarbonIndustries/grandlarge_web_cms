@@ -10,6 +10,7 @@ define('INC_DIR',ROOT . PD . 'inc' . DS);
 define('CLASS_DIR',ROOT . PD . 'inc' . DS . 'classes' . DS);
 define('ELEMENT_DIR',ROOT . PD . 'inc' . DS . 'elements' . DS);
 define('FLOURISH_DIR',CLASS_DIR . 'flourish' . DS);
+define('SESSION_DIR',ROOT . PD . 'sessions' . DS);
 
 #WEB DIRECTORIES
 define('WEB_STORAGE_DIR','storage' . FS);
@@ -19,8 +20,12 @@ define('ABOUT_IMG_NAME','gl_about.jpg');
 define('CSS_DIR',FS . 'css' . FS);
 define('IMG_DIR',FS . 'img' . FS);
 define('JS_DIR',FS . 'js' . FS);
+define('JQUERY_DIR',JS_DIR . 'jquery' . FS);
 define('SCRIPT_DIR',FS . 'scripts' . FS);
 define('SWF_DIR',FS . 'swf' . FS);
+define('JQUERY_VERSION','1.6.2');
+define('JQUERY_FILE',JQUERY_DIR . 'jquery_' . JQUERY_VERSION . '.min.js');
+define('JQUERY_UI_FILE',JQUERY_DIR . 'jquery_ui_1.8.16.custom.min.js');
 
 #CREDITS
 define('SHORT_COMPANY_NAME','Grand Large');
@@ -40,13 +45,16 @@ define('WEB_ABBR','W:');
 define('EMAIL_ABBR','E:');
 
 #SESSION
+define('SESSION_LENGTH','1 week');
 define('USER_LOGIN_ID','userLoginId');
 define('USER_TYPE_ID','userTypeId');
 define('USERNAME','username');
 define('USER_TYPE_PRIVILEGES','userTypePrivileges');
 define('USER_PRIVILEGES','userPrivileges');
 define('MIN_USERNAME_LENGTH',6);
+define('MAX_USERNAME_LENGTH',40);
 define('MIN_PASSWORD_LENGTH',6);
+define('MAX_PASSWORD_LENGTH',20);
 
 #PRIVILEGES
 define('PRIVILEGE_FILE',INC_DIR . 'privileges.php');
@@ -66,5 +74,5 @@ define('ABOUT_IMG_WIDTH',960);
 define('ABOUT_IMG_HEIGHT',214);
 
 #REGEX
-define('USERNAME_RULE','/^[A-z0-9_]{' . MIN_USERNAME_LENGTH . ',}$/');
+define('USERNAME_RULE','/^[A-z0-9_]{' . MIN_USERNAME_LENGTH . ',' . MAX_USERNAME_LENGTH . '}$/');
 ?>

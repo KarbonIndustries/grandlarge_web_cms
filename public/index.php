@@ -1,10 +1,11 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'init.php');
 
+
 if(GL::isLoggedIn())
 {
-	$page = fSession::get(USER_TYPE_ID) == 1 ? 'files' : 'directors';
-	GL::redirectTo('/home.php?p=' . $page);
+	$pages = GL::getPagesForUserType(fSession::get(USER_TYPE_ID));
+	GL::redirectTo('/home.php?p=' . $pages[0]);
 }
 
 $submitted  = $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -15,8 +16,8 @@ if($submitted)
 {
 	if($user = GL::login($_POST['username'],$_POST['password']))
 	{
-		$page = fSession::get(USER_TYPE_ID) == 1 ? 'files' : 'directors';
-		GL::redirectTo('/home.php?p=' . $page);
+		$pages = GL::getPagesForUserType(fSession::get(USER_TYPE_ID));
+		GL::redirectTo('/home.php?p=' . $pages[0]);
 	}
 
 	$loginError = <<<ERR
@@ -58,14 +59,16 @@ require_once(ELEMENT_DIR . 'html_head.php');
 	</table>
 </div>
 
-<script type="text/javascript" charset="utf-8">
-	$(function()
-	{
-		$('div#loginShell').find('div#usernameShell').find('input#username').focus();
-	});
-</script>
-
 <?php
+define('PAGE_SCRIPT',
+<<<SCRIPT
+$(function()
+{
+	$('div#loginShell').find('div#usernameShell').find('input#username').focus();
+});
+SCRIPT
+);
+
 require_once(ELEMENT_DIR . 'html_foot.php');
 GL::closeDb();
 ?>
