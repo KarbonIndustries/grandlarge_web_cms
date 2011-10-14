@@ -1,0 +1,8 @@
+Options +FollowSymLinks
+RewriteEngine on
+
+# REWRITE RULES
+RewriteRule ^logout/?$														/logout.php [L]
+RewriteRule ^([A-z]+)/?$													/home.php?page=$1 [L]
+RewriteRule ^(files)/([A-z]+)/([^/]{6,40})/([^/]{32}|[^/]{40})/?$			/home.php?page=$1&action=$2&username=$3&filehash=$4 [L]
+RewriteRule ^(files)/([A-z]+)/([^/]{6,40})/?$								/home.php?page=$1&action=$2&username=$3 [L]

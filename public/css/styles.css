@@ -9,7 +9,7 @@ img{border:none;}
 ul{list-style-type:none;padding:0;}
 .hidden{display:none;}
 .invisible{visibility:hidden;}
-tr.altRow{background:#141414;}
+tr.altRow,div.altRow{background:#141414;}
 
 #navShell{border-right:1px solid #65A7C0;position:fixed;top:0;bottom:0;z-index:2;width:200px;text-align:right;}
 	#navShell>div>h1{padding-right:15px;}
@@ -148,3 +148,10 @@ tr.altRow{background:#141414;}
 /* = FILES = */
 /* ========= */
 
+#fileShell>div.fileRow{padding:8px;}
+#fileShell .fileErrorMsg{background:#FF0000;color:#FFFFFF;padding:5px;max-width:60%;}
+#fileShell .usersTitle{color:#FFFFFF;}
+#fileShell .fileBackLink{color:#65A7C0;}
+	#fileShell>div a:link,#fileShell>div a:visited{color:#FFFFFF;font-size:14px;}
+	#fileShell>div a:hover{color:#65A7C0;}
+		#fileShell>div a span{color:#777777;}

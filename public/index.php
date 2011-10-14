@@ -5,7 +5,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . '..' . DIRECTORY_
 if(GL::isLoggedIn())
 {
 	$pages = GL::getPagesForUserType(fSession::get(USER_TYPE_ID));
-	GL::redirectTo('/home.php?p=' . $pages[0]);
+	GL::redirectTo('/' . $pages[0]);
 }
 
 $submitted  = $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -17,7 +17,7 @@ if($submitted)
 	if($user = GL::login($_POST['username'],$_POST['password']))
 	{
 		$pages = GL::getPagesForUserType(fSession::get(USER_TYPE_ID));
-		GL::redirectTo('/home.php?p=' . $pages[0]);
+		GL::redirectTo('/' . $pages[0]);
 	}
 
 	$loginError = <<<ERR

@@ -1,12 +1,12 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'init.php');
 GL::confirmLoggedIn();
-require_once(ELEMENT_DIR . 'html_head.php');
 $SELF    = $_SERVER['PHP_SELF'];
 $PAGES   = GL::getPagesForUserType(fSession::get(USER_TYPE_ID));
-$reqPage = isset($_GET['p']) ? strtolower($_GET['p']) : NULL;
+$reqPage = isset($_GET['page']) ? strtolower($_GET['page']) : NULL;
 $selPage = in_array($reqPage,$PAGES,true) ? $reqPage : $PAGES[0];
-
+GL::checkForUserFileAction($fileError,$userFiles);
+require_once(ELEMENT_DIR . 'html_head.php');
 ?>
 
 <div id="navShell">
@@ -17,10 +17,11 @@ $selPage = in_array($reqPage,$PAGES,true) ? $reqPage : $PAGES[0];
 		<?php
 		while($pageName = array_shift($PAGES))
 		{?>
-			<li><a class="<?= $selPage == $pageName ? 'selected' : '' ?>" href="?p=<?= $pageName ?>"><?= ucwords($pageName) ?></a></li>
-		<?}?>
+			<li><a class="<?= $selPage == $pageName ? 'selected' : '' ?>" href="/<?= $pageName ?>"><?= ucwords($pageName) ?></a></li>
+		<?}
+		?>
 			<li><a href="<?= COMPANY_BASE_URL ?>" target="_blank">Visit Site</a></li>
-			<li><a href="/logout.php" title="Logged in as <?= fSession::get(USERNAME) ?>">Logout</a></li>
+			<li><a href="/logout" title="Logged in as <?= fSession::get(USERNAME) ?>">Logout</a></li>
 	</ul>
 </div>
 

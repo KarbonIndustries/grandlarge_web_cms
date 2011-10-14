@@ -9,6 +9,5 @@ if(defined('PAGE_SCRIPT'))
 <script type="text/javascript" charset="utf-8">
 	<?= PAGE_SCRIPT ?>
 </script>
-<?}
-?>
+<?}?>
 </html>

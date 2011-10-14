@@ -1,1 +1,24 @@
+ =========
+ = NOTES =
+ =========
+
 Using Flourish r960
+
+sessions, media_storage must have write permission
+
+PRIVILEGE KEY
+
+usertype
+0 => client
+1 => admin
+2 => architect
+3 => self
+
+action
+0 => add user
+1 => edit user type
+2 => edit password
+3 => remove user
+4 => view user file
+5 => download user file
+6 => remove user file

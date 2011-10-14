@@ -12,7 +12,7 @@ class GL
 	#====================================================================================
 	# INSERT METHODS
 	#====================================================================================
-	public static function addDirector($info,$returnJSON = true)
+	public static function addDirector(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -54,7 +54,7 @@ class GL
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
 	}
 
-	public static function addOfficeCategory($info,$returnJSON = true)
+	public static function addOfficeCategory(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -102,7 +102,7 @@ class GL
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
 	}
 	
-	public static function addOffice($info,$returnJSON = true)
+	public static function addOffice(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -204,7 +204,7 @@ Q;
 		return $returnJSON ? json_encode($result) : false;
 	}
 
-	public static function addFeed($info,$returnJSON = true)
+	public static function addFeed(array $info,$returnJSON = true)
 	{
 		if(!is_array($info) ||
 		!array_key_exists('directorId',$info) ||
@@ -265,7 +265,7 @@ Q;
 		return mysql_affected_rows() ? true : false;
 	}
 
-	public static function addUser($info,$returnJSON = true)
+	public static function addUser(array $info,$returnJSON = true)
 	{
 		if(!isset(
 			$info['userId'],
@@ -324,12 +324,14 @@ INSERT INTO `users` (`userTypeId`,`username`,`password`)
 VALUES({$info['userTypeId']},'{$info['username']}',SHA1('{$info['password']}'))
 Q;
 		self::queryDb($query);
-		if(!mysql_affected_rows() === 1)
+		if(mysql_affected_rows() !== 1 || mysql_errno($link))
 		{
 			$json['success'] = false;
 			$json['msg']     = 'There was an error adding ' . $info['username'] . '. Please try again.';
 			return $returnJSON ? json_encode($json) : false;
 		}
+
+		self::addUserDirectory($info['username']);
 
 		$json['success'] = true;
 		$json['msg']     = $info['username'] . ' was successfully added.';
@@ -360,7 +362,7 @@ Q;
 		return false;
 	}
 
-	public static function getDirector($info,$returnJSON = true)
+	public static function getDirector(array $info,$returnJSON = true)
 	{
 		$link = self::openConnection();
 		$id = is_array($info) ? $info['id'] : $info;
@@ -419,7 +421,7 @@ Q;
 		return false;
 	}
 
-	public static function getOffice($info,$returnJSON = true)
+	public static function getOffice(array $info,$returnJSON = true)
 	{
 		$link = self::openConnection();
 		$id = is_array($info) ? $info['id'] : $info;
@@ -657,8 +659,60 @@ Q;
 		}
 	}
 
-	public static function getUser($id,$returnJSON = true)
+	public static function getUserById($id,$returnJSON = false)
 	{
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `users`
+WHERE `users`.`id` = {$id}
+LIMIT 1
+Q;
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result) === 1)
+		{
+			return mysql_fetch_assoc($result);
+		}
+		return false;
+	}
+
+	public static function getUsernameById($id,$returnJSON = false)
+	{
+		$user = self::getUserById($id);
+		return $user ? $user['username'] : false;
+	}
+
+	public static function getUserByUsername($username,$field = null,$type = null,$returnJSON = false)
+	{
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `users`
+WHERE `users`.`username` = '{$username}'
+LIMIT 1
+Q;
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result) === 1)
+		{
+			$row = mysql_fetch_array($result);
+			$value = $field ? (isset($row[$field]) ? $row[$field] : false) : $row;
+			if($value && $field && $type)
+			{
+				switch($type)
+				{
+					case 'string':
+					return (string) $value;
+					case 'int':
+					case 'integer':
+					return (int) $value;
+					case 'bool':
+					case 'boolean':
+					return (bool) $value;
+					default:
+					return $value;
+				}
+			}
+			return $value;
+		}
+		return false;
 	}
 
 	private static function usernameIsAvailable($username,$returnJSON = false)
@@ -676,10 +730,31 @@ Q;
 		return false;
 	}
 
+	public static function getUsersWithMaxUserType($userTypeId,$returnJSON = false)
+	{
+		$link = self::openConnection();
+		$query = <<<Q
+SELECT * FROM `users`
+WHERE `users`.`userTypeId` <= {$userTypeId}
+ORDER BY `users`.`username` ASC
+Q;
+		$result = self::queryDb($query);
+		if(mysql_num_rows($result))
+		{
+			$users;
+			while($row = mysql_fetch_assoc($result))
+			{
+				$users[] = $row;
+			}
+			return $users;
+		}
+		return false;
+	}
+
 	#====================================================================================
 	# UPDATE METHODS
 	#====================================================================================
-	public static function updateDirector($info,$returnJSON = true)
+	public static function updateDirector(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -728,7 +803,7 @@ Q;
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'Invalid Info.')) : false;
 	}
 
-	public static function updateOfficeCategory($info,$returnJSON = true)
+	public static function updateOfficeCategory(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -775,7 +850,7 @@ Q;
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'A category named ' . $info['name'] . ' already exists.')) : false;
 	}
 
-	public static function updateOffice($info,$returnJSON = true)
+	public static function updateOffice(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -792,7 +867,6 @@ Q;
 		}
 
 		$info['officeLocale']      = ucwords(strtolower($info['officeLocale']));
-#		$info['companyName']       = ucwords(strtolower($info['companyName']));
 		$info['companyName']       = ucwords($info['companyName']);
 		$info['address1']          = ucwords(strtolower($info['address1']));
 		$info['address2']          = ucwords(strtolower($info['address2']));
@@ -862,7 +936,7 @@ Q;
 		return $returnJSON ? json_encode($result) : false;
 	}
 
-	public static function updateFeed($info,$returnJSON = true)
+	public static function updateFeed(array $info,$returnJSON = true)
 	{
 		if(!is_array($info) ||
 		!array_key_exists('feedId',$info) ||
@@ -895,7 +969,7 @@ Q;
 
 	}
 
-	public static function updateNotable($info,$returnJSON = true)
+	public static function updateNotable(array $info,$returnJSON = true)
 	{
 		if(is_array($info) && array_key_exists('id',$info) && array_key_exists('title',$info) && array_key_exists('url',$info) && filter_var($info['url'],FILTER_VALIDATE_URL))
 		{
@@ -926,7 +1000,7 @@ Q;
 		return $returnJSON ? json_encode($errorData) : false;
 	}
 
-	public static function updateAbout($info,$returnJSON = true)
+	public static function updateAbout(array $info,$returnJSON = true)
 	{
 		$link = self::openConnection();
 		$query = <<<Q
@@ -945,7 +1019,7 @@ Q;
 		return false;
 	}
 
-	public static function updateUserType($info,$returnJSON = true)
+	public static function updateUserType(array $info,$returnJSON = true)
 	{
 		if(!isset(
 			$info['userId'],
@@ -985,7 +1059,7 @@ Q;
 		return $returnJSON ? json_encode($json) : true;
 	}
 
-	public static function updatePassword($info,$returnJSON = true)
+	public static function updatePassword(array $info,$returnJSON = true)
 	{
 		if(!isset(
 			$info['userId'],
@@ -1044,7 +1118,7 @@ Q;
 	#====================================================================================
 	# DELETE METHODS
 	#====================================================================================
-	public static function removeDirector($info,$returnJSON = true)
+	public static function removeDirector(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -1078,7 +1152,7 @@ Q;
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'There was an error removing the director.')) : false;
 	}
 
-	public static function removeOfficeCategory($info,$returnJSON = true)
+	public static function removeOfficeCategory(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -1131,7 +1205,7 @@ Q;
 		return $returnJSON ? json_encode(array('success' => false,'message' => 'There was an error removing the category.')) : false;
 	}
 
-	public static function removeOffice($info,$returnJSON = true)
+	public static function removeOffice(array $info,$returnJSON = true)
 	{
 		if(!is_array($info))
 		{
@@ -1202,7 +1276,7 @@ Q;
 		return $returnJSON ? json_encode($result) : false;
 	}
 
-	public static function removeNotable($info,$returnJSON = true)
+	public static function removeNotable(array $info,$returnJSON = true)
 	{
 		$errorData = array();
 		$errorData['success'] = false;
@@ -1236,7 +1310,7 @@ Q;
 		return $returnJSON ? json_encode($errorData) : false;
 	}
 
-	public static function removeUser($info,$returnJSON = true)
+	public static function removeUser(array $info,$returnJSON = true)
 	{
 		if(!isset(
 			$info['userId'],
@@ -1247,7 +1321,9 @@ Q;
 			return $returnJSON ? json_encode($json) : fasle;
 		}
 
-		$info['actionId'] = REMOVE_USER_ID;
+		$info['userId']     = (int) $info['userId'];
+		$info['userTypeId'] = (int) $info['userTypeId'];
+		$info['actionId']   = REMOVE_USER_ID;
 
 		if(!self::userCanPerformAction($info))
 		{
@@ -1256,6 +1332,8 @@ Q;
 			return $returnJSON ? json_encode($json) : false;
 		}
 
+		self::removeUserDirectory(self::getUsernameById($info['userId']));
+
 		$link = self::openConnection();
 		$query = <<<Q
 DELETE FROM `users`
@@ -1263,7 +1341,7 @@ WHERE `users`.`id` = {$info['userId']}
 LIMIT 1
 Q;
 		self::queryDb($query);
-		if(!mysql_affected_rows() === 1 || mysql_errno($link))
+		if(mysql_affected_rows() !== 1 || mysql_errno($link))
 		{
 			$json['success'] = false;
 			$json['msg']     = 'There was an error removing the user. Please try again.';
@@ -1271,13 +1349,256 @@ Q;
 		}
 
 		$userLoginId = fSession::get(USER_LOGIN_ID);
-		$self        = (int) $info['userId'] === $userLoginId;
+		$self        = $info['userId'] === $userLoginId;
 
 		$json['success']     = true;
 		$json['msg']         = 'User was successfully removed.';
 		$json['removedSelf'] = $self;
 		$self ? fSession::destroy() : null;
 		return $returnJSON ? json_encode($json) : true;
+	}
+
+	#====================================================================================
+	# FILE METHODS
+	#====================================================================================
+	private static function addUserDirectory($username)
+	{
+		if(self::getUserDirectory($username) === false)
+		{
+			fDirectory::create(MEDIA_STORAGE_DIR . $username . DS);
+		}
+	}
+
+	private static function removeUserDirectory($username)
+	{
+		if($userDirs = self::getUserDirectories())
+		{
+			while($dir = array_shift($userDirs))
+			{
+				if($dir->getName() === $username)
+				{
+					$dir->delete();
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static function getUserDirectory($username)
+	{
+		$userDirs = self::getUserDirectories();
+		while($dir = array_shift($userDirs))
+		{
+			if($dir->getName() === $username)
+			{
+				return $dir;
+			}
+		}
+		return false;
+	}
+
+	public static function getUserDirectories(array $users = null)
+	{
+		$media_storage_dir = new fDirectory(MEDIA_STORAGE_DIR);
+		if($users)
+		{
+			$userDirs;
+			foreach($users as $user)
+			{
+				if($userDir = new fDirectory(MEDIA_STORAGE_DIR . $user['username'] . DS))
+				{
+					$userDirs[] = $userDir;
+				}
+			}
+			return $userDirs;
+		}
+		return $media_storage_dir->scan(USER_DIRECTORY_RULE);
+	}
+
+	public static function getUserFile($username,$filename,$hashed = false)
+	{
+		$exception = new fExpectedException();
+		if($userFiles = self::getUserFiles($username))
+		{
+			while($file = array_shift($userFiles))
+			{
+				$name = $file->getName();
+				if(($hashed ? self::encryptStr($name,FILENAME_HASH_METHOD) : $name) === $filename)
+				{
+					return $file;
+				}
+			}
+			$exception->setMessage(FILE_NOT_FOUND);
+		}
+		$exception->setMessage(FILE_NOT_FOUND);
+		throw $exception;
+	}
+
+	public static function getUserFiles($username)
+	{
+		if($userDir = self::getUserDirectory($username))
+		{
+			return $userDir->scan(USER_FILE_RULE);
+		}
+		return false;
+	}
+
+	public static function checkForUserFileAction(&$errorMsg,&$userFiles)
+	{
+		$action;
+		$username;
+		if(isset(
+			$_GET['action'],
+			$_GET['username'],
+			$_GET['filehash']
+			))
+		{
+			$action   = $_GET['action'];
+			$username = $_GET['username'];
+			$filehash = $_GET['filehash'];
+
+			if(is_callable(array(__CLASS__,$action . 'UserFile'),false,$name))
+			{
+				$method = $action . 'UserFile';
+				try
+				{
+					self::$method($username,$filehash,true);
+				}catch(Exception $e)
+				{
+					$errorMsg = $e->getMessage();
+				}
+			}else
+			{
+				$errorMsg = UNKNOWN_REQUEST;
+			}
+		}else
+		{
+			if(isset(
+				$_GET['action'],
+				$_GET['username']
+				))
+			{
+				$action = $_GET['action'];
+				$username = $_GET['username'];
+
+				if(is_callable(array(__CLASS__,$action . 'UserFiles'),false))
+				{
+					$method = $action . 'UserFiles';
+					try
+					{
+						$userFiles = self::$method($username);
+					}catch(Exception $e)
+					{
+						$errorMsg = $e->getMessage();
+					}
+				}else
+				{
+					$errorMsg = UNKNOWN_REQUEST;
+				}
+			}
+		}
+	}
+
+	public static function downloadUserFile($username,$filename,$hashed = false)
+	{
+		$exception = new fExpectedException('blah');
+		if(!$user = self::getUserByUsername($username))
+		{
+			$exception->setMessage(INVALID_USER);
+			throw $exception;
+		}
+		$userId     = (int) $user['id'];
+		$userTypeId = (int) $user['userTypeId'];
+		$action     = array('userId' => $userId,'userTypeId' => $userTypeId,'actionId' => DOWNLOAD_FILE_ID);
+
+		if(self::userCanPerformAction($action))
+		{
+			if($file = self::getUserFile($username,$filename,$hashed))
+			{
+				fSession::close();
+				$file->output(true,true);
+				exit;
+			}
+			$exception->setMessage(FILE_NOT_FOUND);
+			throw $exception;
+		}
+		$exception->setMessage(NO_DOWNLOAD_FILE_PERMISSION);
+		throw $exception;
+	}
+
+	public static function removeUserFile($username,$filename,$hashed = false)
+	{
+		if(!$user = self::getUserByUsername($username))
+		{
+			throw new fExpectedException($username . ' is not a valid user.');
+		}
+		$userId     = (int) $user['id'];
+		$userTypeId = (int) $user['userTypeId'];
+		$action     = array('userId' => $userId,'userTypeId' => $userTypeId,'actionId' => REMOVE_FILE_ID);
+		$exception = new fExpectedException();
+		if(self::userCanPerformAction($action))
+		{
+			if($userFiles = self::getUserFiles($username))
+			{
+				while($file = array_shift($userFiles))
+				{
+					$name = $file->getName();
+					if(($hashed ? self::encryptStr($name,FILENAME_HASH_METHOD) : $name) === $filename)
+					{
+						$file->delete();
+						return true;
+					}
+				}
+				$exception->setMessage(FILE_NOT_FOUND);
+			}
+			$exception->setMessage(FILE_NOT_FOUND);
+			throw $exception;
+		}
+		$exception->setMessage(NO_REMOVE_FILE_PERMISSION);
+		throw $exception;
+	}
+
+	public static function viewUserFiles($username)
+	{
+		$exception = new fExpectedException();
+		if(!$user = self::getUserByUsername($username))
+		{
+			$exception->setMessage(INVALID_USER);
+			throw $exception;
+		}
+		$userId     = (int) $user['id'];
+		$userTypeId = (int) $user['userTypeId'];
+		$action     = array('userId' => $userId,'userTypeId' => $userTypeId,'actionId' => VIEW_FILE_ID);
+		$exception = new fExpectedException();
+
+		if(self::userCanPerformAction($action))
+		{
+			if($userFiles = self::getUserFiles($username))
+			{
+				return $userFiles;
+			}
+			$exception->setMessage(NO_FILES_FOUND);
+			throw $exception;
+		}
+		$exception->setMessage(NO_VIEW_FILE_PERMISSION);
+		throw $exception;
+	}
+
+	public static function encryptStr($string,$method)
+	{
+		switch($method)
+		{
+			case SHA1:
+			return sha1($string);
+			break;
+			case MD5:
+			return md5($string);
+			break;
+			default:
+			return $string;
+			break;
+		}
 	}
 
 	#====================================================================================
@@ -1376,7 +1697,7 @@ Q;
 		return fSession::get(USER_TYPE_PRIVILEGES,false);
 	}
 
-	public static function userCanPerformAction($info,$returnJSON = false)
+	public static function userCanPerformAction(array $info,$returnJSON = false)
 	{
 		if(isset($info['userId'],$info['userTypeId'],$info['actionId']))
 		{
@@ -1434,11 +1755,6 @@ Q;
 			return (int) $row['id'];
 		}
 		return false;
-	}
-
-	public static function startSession()
-	{
-		fSession::open();
 	}
 
 	public static function isLoggedIn()
