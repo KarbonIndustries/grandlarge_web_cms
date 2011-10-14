@@ -26,7 +26,7 @@ elseif($userFiles && isset($_GET['username']))
 	$username = $_GET['username'];
 	foreach($userFiles as $file)
 	{?>
-		<div class="fileRow <?= GL::altStr('altRow') ?>"><a href="/files/download/<?= $username . '/' . GL::encryptStr($file->getName(),FILENAME_HASH_METHOD) ?>"><?= $file->getName() . ' <span class="fileSize">(' . fFilesystem::formatFileSize($file->getSize()) . ')</span>' ?></a></div>
+		<div class="fileRow <?= GL::altStr('altRow') ?>"><a href="/files/download/<?= $username . '/' . GL::encryptStr($file->getName(),FILENAME_HASH_METHOD) ?>"><?= $file->getName() . ' <span class="fileSize">(' . $file->getSize(true) . ')</span>' ?></a></div>
 	<?}
 	if(fSession::get(USER_TYPE_ID) > 1)
 	{?>
@@ -57,7 +57,7 @@ elseif($userFiles && isset($_GET['username']))
 		<?
 		foreach($userFiles as $file)
 		{?>
-			<div class="fileRow <?= GL::altStr('altRow') ?>"><a class="fileLink" href="/files/download/<?= fSession::get(USERNAME) . '/' . GL::encryptStr($file->getName(),FILENAME_HASH_METHOD) ?>"><?= $file->getName() . ' <span class="fileSize">(' . fFilesystem::formatFileSize($file->getSize()) . ')</span>' ?></a></div>
+			<div class="fileRow <?= GL::altStr('altRow') ?>"><a class="fileLink" href="/files/download/<?= fSession::get(USERNAME) . '/' . GL::encryptStr($file->getName(),FILENAME_HASH_METHOD) ?>"><?= $file->getName() . ' <span class="fileSize">(' . $file->getSize(true) . ')</span>' ?></a></div>
 		<?}
 	}elseif(isset($userDirs))
 	{?>
@@ -67,7 +67,7 @@ elseif($userFiles && isset($_GET['username']))
 		{
 			$fileCount = count($dir->scan());
 		?>
-			<div class="fileRow <?= GL::altStr('altRow') ?>"><a href="/files/view/<?= $dir->getName() ?>"><?= $dir->getName() . ' <span class="fileSize">(' . $fileCount . ($fileCount == 1 ? ' file => ' : ' files ') . fFilesystem::formatFileSize($dir->getSize()) . ')</span>' ?></a></div>
+			<div class="fileRow <?= GL::altStr('altRow') ?>"><a href="/files/view/<?= $dir->getName() ?>"><?= $dir->getName() . ' <span class="fileSize">(' . $fileCount . ($fileCount == 1 ? ' file => ' : ' files ') . $dir->getSize(true) . ')</span>' ?></a></div>
 		<?}
 	}else
 	{?>
